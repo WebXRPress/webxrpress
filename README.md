@@ -7,3 +7,4 @@ An plugin for WordPress that makes embedding open source WebXR experiences easy.
 - Local rendering of WordPress posts and pages within VR.
 - Remote browser rendering services for generic web content within VR.
 - Multiuser coordination of data and voice channels within VR.
+- Support hmd.link or similar service to "Open in your HMD" functionaliy (see https://hmd.link) 
