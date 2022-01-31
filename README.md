@@ -1,4 +1,4 @@
-# WebXRPress
+# WebXRPress - (currently in development; initial release pending)
 An plugin for WordPress that makes embedding and creating virtual reality, (and eventually augmented reality) WebXR based experiences easy.
 
 # TODO:
