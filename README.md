@@ -1,5 +1,5 @@
 # WebXRPress - (currently in development; initial release pending)
-An plugin for WordPress that makes embedding and creating virtual reality, (and eventually augmented reality) WebXR based experiences easy.
+An plugin for WordPress that publishing virtual reality, (and eventually augmented reality) WebXR based experiences easy.
 
 # TODO:
 - Integerate with WebXRPress Library, a generic WebXR boilerplate for PlayCanvas.
