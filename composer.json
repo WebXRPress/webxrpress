@@ -1,0 +1,23 @@
+{
+    "name": "webxrpress/webxrpress",
+    "description": "A plugin for WordPress that makes embedding and creating virtual reality, (and eventually augmented reality) WebXR based experiences easy.",
+    "type": "wordpress-plugin",
+    "require": {
+        "cmb2/cmb2": "^2.9"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "WebXRPress\\webxrpress\\": "src/"
+        },
+        "files": [
+            "vendor/cmb2/cmb2/init.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Stephen J. Carnam",
+            "email": "steve@steveorevo.com"
+        }
+    ]
+}
