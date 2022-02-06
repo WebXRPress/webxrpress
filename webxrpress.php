@@ -10,10 +10,13 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */  
 
- // Serve up a 'blank' page ready to have it's DOM manipulated and content
- // rendered to image data and returned to PlayCanvas.
- if ( 'blank' == $_GET['wxrp']) {
-    require("blank.php");
-    exit();
- }
- 
+// Serve up a 'blank' page ready to have it's DOM manipulated and content
+// rendered to image data and returned to PlayCanvas.
+if ( 'blank' == $_GET['wxrp']) {
+   require("blank.php");
+   exit();
+}
+
+ // Register the WebXRPress post type
+require('vendor/autoload.php');
+require("webxrpress-post-type.php");
