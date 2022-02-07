@@ -43,7 +43,7 @@ function register_post_type_webxrpress() {
         'show_in_menu' => true,
         'show_in_admin_bar' => false,
         'show_in_nav_menus' => false,
-        'delete_with_user' => false,
+        'delete_with_user' => true,
         'execlude_from_search' => true,
         'capability_type' => 'post',
         'map_meta_cap' => true,
@@ -63,3 +63,19 @@ function register_post_type_webxrpress() {
     register_post_type( 'webxr_world', $args );
 }
 add_action( 'init', 'register_post_type_webxrpress' );
+
+function add_meta_boxes_webxr_world() {
+
+    add_meta_box( 'webxr-world', __( 'WebXR World', 'webxrpress' ), function() {
+        global $post;
+        if ($post->post_status == 'auto-draft') {
+            echo '<div style="padding: 3em;">Please save the world before visting/editing content.</div>';
+            return;
+        }else{
+            echo "Here's your world";
+        }
+
+    }, ['webxr_world'], 'normal', 'high' );
+
+}
+add_action( 'add_meta_boxes_webxr_world', 'add_meta_boxes_webxr_world' );
