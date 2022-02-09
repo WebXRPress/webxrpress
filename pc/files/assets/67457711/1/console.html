@@ -1,0 +1,51 @@
+<style>
+    #console-id {
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 13px;
+        overflow: hidden;
+        white-space: nowrap;
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+        white-space: pre;
+    }
+</style>
+<div id="console-id" class="console-class">
+    
+</div>
+<script>
+    console.log("Hello from console.html");
+    window.addEventListener('message', function(e) {
+        let consoleDIV = document.getElementById('console-id');
+
+        // Change the fontsize
+        if (e.data.fontSize != undefined) {
+            consoleDIV.style.fontSize = e.data.fontSize + 'px';
+            consoleDIV.style.lineHeight = e.data.fontSize + Math.round(e.data.fontSize / 8) + 'px';
+        }
+
+        // Display the console lines
+        if (e.data.console != undefined) {
+            consoleDIV.innerHTML = e.data.console;
+        }
+    });
+
+    // // Simulate CPU intensive task after HTML loaded (from jQuery, not DOM ready)
+    window.sendMessage({parentConsoleLog:"Doesn't stall in Editor->Launch mode"});
+
+    function mySlowFunction(baseNumber) {
+        window.sendMessage({parentConsoleLog:'Starting CPU Intensive Task'});
+        let result = 0;	
+        for (var i = Math.pow(baseNumber, 7); i >= 0; i--) {		
+            result += Math.atan(i) * Math.tan(i);
+        };
+        window.sendMessage({parentConsoleLog:'Stopped Task'});
+    }
+
+    // Repeat the intense calc. every 3 seconds
+    setInterval(function() {
+        mySlowFunction(8); // higher number => more iterations => slower
+    }, 3000);
+    
+</script>
