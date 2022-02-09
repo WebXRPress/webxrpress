@@ -10,6 +10,9 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */  
 
+// Enable multi-threading/processes for WebXR/iframes
+header('Origin-Agent-Cluster: ?1');
+
 // Serve up a 'blank' page ready to have it's DOM manipulated and content
 // rendered to image data and returned to PlayCanvas.
 if ( 'blank' == $_GET['wxrp']) {
@@ -17,6 +20,10 @@ if ( 'blank' == $_GET['wxrp']) {
    exit();
 }
 
- // Register the WebXRPress post type
-require('vendor/autoload.php');
+// Serve up the request WebXR World
+if ( 'world' == $_GET['wxrp']) {
+   require("world.php");
+}
+
+// Register the WebXRPress post type
 require("webxrpress-post-type.php");

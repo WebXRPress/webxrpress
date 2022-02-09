@@ -72,7 +72,9 @@ function add_meta_boxes_webxr_world() {
             echo '<div style="padding: 3em;">Please save the world before visting/editing content.</div>';
             return;
         }else{
-            echo "Here's your world";
+            echo "<iframe src=\"" . site_url('?wxrp=world&post=' . $post->ID). "\" title=\"" . $post->post_title . "\"></iframe><br />";
+            echo "This world can be accessed via this link: <br/>";
+            echo "<a href=\"" . site_url('?wxrp=world&post=' . $post->ID). "\" target=\"_blank\">" . site_url('?wxrp=world&post=' . $post->ID). "</a>.";
         }
 
     }, ['webxr_world'], 'normal', 'high' );
