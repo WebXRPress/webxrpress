@@ -14,7 +14,7 @@
             // Only send the message if we are in an iframe
             if ( window.location !== window.parent.location ) {
                 message.guid = guid; // always furnish our unique id
-                window.top.postMessage(message, '*');
+                window.parent.postMessage(message, '*');
             }      
         };
 
