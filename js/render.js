@@ -19,12 +19,25 @@
         };
 
         // Implement our sendRender routine, with optional messages
-        var renderDIV = document.getElementById('render-div');
+        var renderDIV = document.getElementsByClassName("wxrp-render");
+        if (renderDIV.length > 0) {
+            renderDIV = renderDIV[0];
+        }else{
+            return;
+        }
         window.sendRender = function(message = {}) {
-            htmlToImage.toPng(renderDIV).then(function(dataUrl) {
-                message.dataUrl = dataUrl;
-                sendMessage(message);
-            });   
+            let re = (new URLSearchParams(window.location.search)).get('re');
+            if (re == 'html2canvas') {
+                html2canvas(renderDIV).then(function(canvas) {
+                    message.dataUrl = canvas.toDataURL();
+                    sendMessage(message);
+                });
+            }else{
+                htmlToImage.toPng(renderDIV).then(function(dataUrl) {
+                    message.dataUrl = dataUrl;
+                    sendMessage(message);
+                });
+            }
         };
         
         // Process incoming message requests
