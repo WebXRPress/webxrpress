@@ -11,6 +11,15 @@
         var guid = (new URLSearchParams(window.location.search)).get('guid');
         if (guid == null) return;
 
+        // Support remote console for iframes in vr
+        var oldConsole = window.console.log;
+        window.console.log = function(msg) {
+            oldConsole(msg);
+            sendMessage({
+                parentConsoleLog: msg
+            });
+        };
+        
         // Implement our sendMessage routine
         window.sendMessage = function(message = {}) {
             
