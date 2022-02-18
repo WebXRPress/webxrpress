@@ -10,6 +10,7 @@
             <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/html-to-image.js'; ?>"></script>
         <?php endif; ?>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render.js'; ?>"></script>
+        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive.js'; ?>"></script>
     </head>
     <body>
         <div class="wxrp-render">

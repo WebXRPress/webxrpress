@@ -1,8 +1,11 @@
 /**
  * Render content of the #render-div to an image and send it back to PlayCanvas
  * iframe parent. 
+ * 
+ * Copyright (c) 2022 Stephen J. Carnam
+ * Released under MIT License
  */
-(function($) {
+ (function($) {
     $(function() {
         // Require unique id
         var guid = (new URLSearchParams(window.location.search)).get('guid');
@@ -42,13 +45,13 @@
         
         // Process incoming message requests
         window.addEventListener('message', function(e) {
-            
             // Load incoming html and execute scripts (thx jQuery!)
             if (e.data.html != undefined) {
                 renderDIV.style.height = e.data.height + 'px';
                 renderDIV.style.width = e.data.width + 'px';
                 renderDIV.style.backgroundColor = e.data.backgroundColor;
                 $(renderDIV).html(e.data.html);
+                window.emulateCSSBehaviors(); 
             }
 
             // Process render requests
