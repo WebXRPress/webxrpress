@@ -25,5 +25,9 @@ if ( 'world' == $_GET['wxrp']) {
    require("world.php");
 }
 
+// Serve up/allow upload of additional mime-types
+require("mime-types.php");
+
 // Register the WebXRPress post type
 require("webxrpress-post-type.php");
+
