@@ -7,7 +7,7 @@
 # Bundle cmb for distribution as described at 
 # https://github.com/CMB2/CMB2/wiki/Basic-Usage#caveats-for-bundling-and-including-cmb2
 #
-rm -rf ./cmb
+rm -rf ./cmb2
 curl https://downloads.wordpress.org/plugin/cmb2.zip -L -o ./cmb2.zip
 unzip -o cmb2.zip -d ./
 
