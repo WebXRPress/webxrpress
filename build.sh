@@ -10,6 +10,7 @@
 rm -rf ./cmb2
 curl https://downloads.wordpress.org/plugin/cmb2.zip -L -o ./cmb2.zip
 unzip -o cmb2.zip -d ./
+rm ./cmb2.zip
 
 #
 # html-to-image
@@ -36,3 +37,4 @@ curl https://cdn.jsdelivr.net/npm/drawflow@0.0.55/dist/drawflow.min.css -L -o ./
 #
 rm -rf ./pc
 unzip -o "./WebXRPress Library.zip" -d ./pc
+rm "./WebXRPress Library.zip"
