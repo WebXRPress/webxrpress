@@ -7,7 +7,7 @@
         <?php if ($_GET['re'] == 'html2canvas'): ?>
             <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/html2canvas.min.js'; ?>"></script>
         <?php else: ?>
-            <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/html-to-image.js'; ?>"></script>
+            <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/html-to-image.min.js'; ?>"></script>
         <?php endif; ?>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render.js'; ?>"></script>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive.js'; ?>"></script>

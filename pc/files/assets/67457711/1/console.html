@@ -15,7 +15,6 @@
     
 </div>
 <script>
-    console.log("Hello from console.html");
     window.addEventListener('message', function(e) {
         let consoleDIV = document.getElementById('console-id');
 
@@ -29,23 +28,5 @@
         if (e.data.console != undefined) {
             consoleDIV.innerHTML = e.data.console;
         }
-    });
-
-    // // Simulate CPU intensive task after HTML loaded (from jQuery, not DOM ready)
-    window.sendMessage({parentConsoleLog:"Doesn't stall in Editor->Launch mode"});
-
-    function mySlowFunction(baseNumber) {
-        window.sendMessage({parentConsoleLog:'Starting CPU Intensive Task'});
-        let result = 0;	
-        for (var i = Math.pow(baseNumber, 7); i >= 0; i--) {		
-            result += Math.atan(i) * Math.tan(i);
-        };
-        window.sendMessage({parentConsoleLog:'Stopped Task'});
-    }
-
-    // Repeat the intense calc. every 3 seconds
-    setInterval(function() {
-        mySlowFunction(8); // higher number => more iterations => slower
-    }, 3000);
-    
+    });   
 </script>
