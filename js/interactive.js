@@ -155,8 +155,10 @@
                     clientX: lastMouseXY.x,
                     clientY: lastMouseXY.y
                 };
-                elm.dispatchEvent(new Event('mouseout', param));
-                elm.dispatchEvent(new Event('mouseleave', param));
+                if (elm != null) {
+                    elm.dispatchEvent(new Event('mouseout', param));
+                    elm.dispatchEvent(new Event('mouseleave', param));
+                }
             }
         }        
 
