@@ -113,12 +113,6 @@
                 };
                 invokePendingMouseUps();
             }
-        
-            // Process render requests
-            if (e.data.requestRender != undefined) {
-                window.sendRender();
-            }
-        
         });
         
         // Listen for mouseover event and apply hover styles

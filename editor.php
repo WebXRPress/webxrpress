@@ -11,8 +11,8 @@
         <?php else: ?>
             <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/html-to-image.min.js'; ?>"></script>
         <?php endif; ?>
-        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js'; ?>"></script>
-        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive.js'; ?>"></script>
+        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js?'; ?>"></script>
+        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive.js?'; ?>"></script>
     </head>
     <body>
         <div class="wxrp-render">
