@@ -71,7 +71,7 @@
         
         // Send DOM changed notifications
         var lastHTML = '';
-        setInterval(function() {
+        window.domChangedInterval = setInterval(function() {
             if (lastHTML != renderDIV.innerHTML) {
                 lastHTML = renderDIV.innerHTML;
                 window.sendMessage({domChanged: true});
