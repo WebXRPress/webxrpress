@@ -78,40 +78,46 @@
             if (e.data.mouseXY != undefined) {
                 lastMouseXY = e.data.mouseXY;
                 let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
-                let param = {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: lastMouseXY.x,
-                    clientY: lastMouseXY.y
-                };
-                elm.dispatchEvent(new MouseEvent('mouseover', param));
-                elm.dispatchEvent(new MouseEvent('mousemove', param));   
+                if (elm != null) {
+                    let param = {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: lastMouseXY.x,
+                        clientY: lastMouseXY.y
+                    };
+                    elm.dispatchEvent(new MouseEvent('mouseover', param));
+                    elm.dispatchEvent(new MouseEvent('mousemove', param));
+                }
             }
         
             // Emulate mousedown, click, mouseup events on any element at the given mouse position
             if (e.data.mouseDown != undefined) {
                 let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
-                let param = {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: lastMouseXY.x,
-                    clientY: lastMouseXY.y
-                };
-                elm.dispatchEvent(new MouseEvent('mousedown', param));
-                elm.dispatchEvent(new MouseEvent('click', param));
+                if (elm != null) {
+                    let param = {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: lastMouseXY.x,
+                        clientY: lastMouseXY.y
+                    };
+                    elm.dispatchEvent(new MouseEvent('mousedown', param));
+                    elm.dispatchEvent(new MouseEvent('click', param));
+                }
             }
             if (e.data.mouseUp != undefined) {
                 let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
-                let param = {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: lastMouseXY.x,
-                    clientY: lastMouseXY.y
-                };
-                invokePendingMouseUps();
+                if (elm != null) {
+                    let param = {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: lastMouseXY.x,
+                        clientY: lastMouseXY.y
+                    };
+                    invokePendingMouseUps();
+                }
             }
         });
         
@@ -142,14 +148,14 @@
         function invokePendingMouseOuts() {
             while(pendingMouseOuts.length > 0) {
                 let elm = pendingMouseOuts.pop();
-                let param = {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: lastMouseXY.x,
-                    clientY: lastMouseXY.y
-                };
                 if (elm != null) {
+                    let param = {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: lastMouseXY.x,
+                        clientY: lastMouseXY.y
+                    };
                     elm.dispatchEvent(new Event('mouseout', param));
                     elm.dispatchEvent(new Event('mouseleave', param));
                 }
@@ -181,14 +187,16 @@
         function invokePendingMouseUps() {
             while(pendingMouseUps.length > 0) {
                 let elm = pendingMouseUps.pop();
-                let param = {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: lastMouseXY.x,
-                    clientY: lastMouseXY.y
-                };
-                elm.dispatchEvent(new Event('mouseup', param));
+                if (elm != null) {
+                    let param = {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: lastMouseXY.x,
+                        clientY: lastMouseXY.y
+                    };
+                    elm.dispatchEvent(new Event('mouseup', param));
+                }
             }
         }
 
