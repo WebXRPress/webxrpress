@@ -14,21 +14,9 @@
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render.js'; ?>"></script>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive.js'; ?>"></script>
         <script>
-        (function($) {
-            $(function() {
-                var id = document.getElementById("drawflow");
-                const editor = new Drawflow(id);
-                editor.start();
-                editor.addNode("Hello", 2, 2, 100, 100, "mynode", {}, "test html");
-                editor.addNode("Hello2", 2, 2, 100, 200, "mynode", {}, '<div style="background-color:orange;">test</div>html2');
-            });
-        })(jQuery);
-        </script>
     </head>
     <body>
         <div class="wxrp-render">
-            <div id="drawflow" style="height:800px;">
-            </div>
         </div>
     </body>
 </html>
