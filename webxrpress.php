@@ -20,7 +20,13 @@ if ( 'blank' == $_GET['wxrp']) {
    exit();
 }
 
-// Serve up the request WebXR World
+// Server up the editor page
+if ( 'editor' == $_GET['wxrp']) {
+   require("editor.php");
+   exit();
+}
+
+// Serve up the requested WebXR World
 if ( 'world' == $_GET['wxrp']) {
    require("world.php");
 }
@@ -30,4 +36,3 @@ require("mime-types.php");
 
 // Register the WebXRPress post type
 require("webxrpress-post-type.php");
-
