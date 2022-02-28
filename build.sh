@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Automate the retrieval of project depemdencies
+# Automate the retrieval of project dependencies
 #
 
 #
