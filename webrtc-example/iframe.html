@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>iframe</title>
+        <script src="https://www.research.dev.cc/wp-includes/js/jquery/jquery.js"></script>
+        <script src="js/iframe-messaging.js?"></script>
+        <script>
+            (function($) {
+                $(function() {
+                    im.onReceiveMessage(function(message) {
+                        console.log("in iFrame: received message: ");
+                        console.log(message);
+                    });
+                    // setTimeout(function() {
+                        console.log("Sending message from iFrame");
+                        im.sendMessage({
+                            message: 'Hello from the iframe!'
+                        });
+                    // }, 1000);
+                });
+            })(jQuery);
+        </script>
+    </head>
+    <body>
+        This is the iframe.<br/>
+    </body>
+</html>
