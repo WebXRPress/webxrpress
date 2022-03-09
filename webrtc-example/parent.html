@@ -103,13 +103,29 @@
 
                 // Now create an offer to connect; this starts the process
                 
+                // localConnection.createOffer()
+                // .then(offer => localConnection.setLocalDescription(offer))
+                // .then(() => remoteConnection.setRemoteDescription(localConnection.localDescription))
+                // .then(() => remoteConnection.createAnswer())
+                // .then(answer => remoteConnection.setLocalDescription(answer))
+                // .then(() => localConnection.setRemoteDescription(remoteConnection.localDescription))
+                // .catch(handleCreateDescriptionError);
                 localConnection.createOffer()
                 .then(offer => localConnection.setLocalDescription(offer))
-                .then(() => remoteConnection.setRemoteDescription(localConnection.localDescription))
-                .then(() => remoteConnection.createAnswer())
-                .then(answer => remoteConnection.setLocalDescription(answer))
-                .then(() => localConnection.setRemoteDescription(remoteConnection.localDescription))
+                .then(function() {
+                  return remoteConnection.setRemoteDescription(localConnection.localDescription.toJSON());
+                })
+                .then(function() {
+                  return remoteConnection.createAnswer();
+                })
+                .then(function(answer){
+                  return remoteConnection.setLocalDescription(answer);
+                })
+                .then(function() {
+                  localConnection.setRemoteDescription(remoteConnection.localDescription.toJSON());
+                })
                 .catch(handleCreateDescriptionError);
+                console.log("connectPeers");
               }
                 
               // Handle errors attempting to create a description;
@@ -251,7 +267,7 @@
     </head>
     <body>
         This is the parent.<br/>
-        <iframe id="theIFrame" src="./iframe.html" width="500px" height="320px"></iframe>
+        <iframe id="theIFrame" src="./iframe.html?" width="500px" height="320px"></iframe>
 
         <h1>MDN - WebRTC: Simple RTCDataChannel sample</h1>
         
