@@ -8,23 +8,6 @@
         <link rel="stylesheet" href="main.css" type="text/css" media="all">
         <script src="adapter.js"></script>
         <script>
-            (function($) {
-                $(function() {
-                    im.onReceiveMessage(function(message) {
-                        console.log("in iFrame: received message: ");
-                        console.log(message);
-                    });
-                    // setTimeout(function() {
-                        console.log("Sending message from iFrame");
-                        im.sendMessage({
-                            message: 'Hello from the iframe!'
-                        });
-                    // }, 1000);
-                });
-            })(jQuery);
-
-
-
             (function() {
 
                 // Define "global" variables
@@ -183,10 +166,10 @@
                 // channel is ready to be connected to the remote.
 
                 function receiveChannelCallback(event) {
-                receiveChannel = event.channel;
-                receiveChannel.onmessage = handleReceiveMessage;
-                receiveChannel.onopen = handleReceiveChannelStatusChange;
-                receiveChannel.onclose = handleReceiveChannelStatusChange;
+                  receiveChannel = event.channel;
+                  receiveChannel.onmessage = handleReceiveMessage;
+                  receiveChannel.onopen = handleReceiveChannelStatusChange;
+                  receiveChannel.onclose = handleReceiveChannelStatusChange;
                 }
 
                 // Handle onmessage events for the receiving channel.
@@ -245,8 +228,31 @@
                 // Set up an event listener which will run the startup
                 // function once the page is done loading.
 
+                (function($) {
+                  $(function() {
+                      im.onReceiveMessage(function(message) {
+                          console.log("in iFrame: received message: ");
+                          console.log(message);
+                          if (message.localDescription) {
+                            console.log("localDescription received!");
+                            remoteConnection = new RTCPeerConnection();
+                            remoteConnection.setRemoteDescription(message.localDescription);
+                          }
+                      });
+                      // setTimeout(function() {
+                          console.log("Sending message from iFrame");
+                          im.sendMessage({
+                              message: 'Hello from the iframe!'
+                          });
+                      // }, 1000);
+                  });
+                })(jQuery);
+
                 window.addEventListener('load', startup, false);
-                })();
+              })();
+
+
+
 
             </script>
     </head>
