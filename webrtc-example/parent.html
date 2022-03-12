@@ -8,22 +8,6 @@
         <link rel="stylesheet" href="main.css" type="text/css" media="all">
         <script src="adapter.js"></script>
         <script>
-            (function($) {
-                $(function() {
-                    im.onReceiveMessage(function(message) {
-                        console.log("in Parent: received message: ");
-                        console.log(message);
-                    });
-                    setTimeout(function() {
-                        console.log("Sending message from parent");
-                        im.sendMessage({
-                            message: 'Hello from the parent!'
-                        });
-                    }, 1000);
-                });
-            })(jQuery);
-
-
             (function() {
 
               // Define "global" variables
@@ -86,6 +70,7 @@
                 localConnection.onicecandidate = function(e) {
                   if (e.candidate) {
                     let x = e.candidate.toJSON();
+                    im.sendMessage({candidate: x});
                     remoteConnection.addIceCandidate(x).catch(handleAddCandidateError);
                   }
                 }
@@ -113,19 +98,19 @@
                 localConnection.createOffer()
                 .then(offer => localConnection.setLocalDescription(offer))
                 .then(function() {
-                  window.im.sendMessage({
+                  im.sendMessage({
                     localDescription: localConnection.localDescription.toJSON()
                   });
-                  return remoteConnection.setRemoteDescription(localConnection.localDescription.toJSON());
+                  //return remoteConnection.setRemoteDescription(localConnection.localDescription.toJSON());
                 })
                 .then(function() {
-                  return remoteConnection.createAnswer();
+                  //return remoteConnection.createAnswer();
                 })
                 .then(function(answer){
-                  return remoteConnection.setLocalDescription(answer);
+                  //return remoteConnection.setLocalDescription(answer);
                 })
                 .then(function() {
-                  localConnection.setRemoteDescription(remoteConnection.localDescription.toJSON());
+                  //localConnection.setRemoteDescription(remoteConnection.localDescription.toJSON());
                 })
                 .catch(handleCreateDescriptionError);
                 console.log("connectPeers");
@@ -259,6 +244,29 @@
                 messageInputBox.value = "";
                 messageInputBox.disabled = true;
               }
+
+              (function($) {
+                $(function() {
+                    im.onReceiveMessage(function(message) {
+                        console.log("in Parent: received message: ");
+                        console.log(message);
+                        if (message.localDescription) {
+                          console.log("localConnection.setRemoteDescription set");
+                          localConnection.setRemoteDescription(message.localDescription);
+                        }
+                        if (message.candidate) {
+                          console.log("invoke localConnection.addIceCandidate");
+                          localConnection.addIceCandidate(message.candidate).catch(handleAddCandidateError);
+                        }
+                    });
+                    setTimeout(function() {
+                        console.log("Sending message from parent");
+                        im.sendMessage({
+                            message: 'Hello from the parent!'
+                        });
+                    }, 1000);
+                });
+              })(jQuery);
 
               // Set up an event listener which will run the startup
               // function once the page is done loading.

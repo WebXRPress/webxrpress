@@ -80,8 +80,9 @@
 
                 remoteConnection.onicecandidate = function(e) {
                     if (e.candidate) {
-                    let x = e.candidate.toJSON();
-                    localConnection.addIceCandidate(x).catch(handleAddCandidateError);
+                      console.log("iframe remoteConnection.onicecandidate invoked");
+                      let x = e.candidate.toJSON();
+                      localConnection.addIceCandidate(x).catch(handleAddCandidateError);
                     }
                 }
 
@@ -227,16 +228,37 @@
 
                 // Set up an event listener which will run the startup
                 // function once the page is done loading.
-
                 (function($) {
                   $(function() {
+                      var remoteConnection = null;
                       im.onReceiveMessage(function(message) {
                           console.log("in iFrame: received message: ");
                           console.log(message);
                           if (message.localDescription) {
                             console.log("localDescription received!");
                             remoteConnection = new RTCPeerConnection();
-                            remoteConnection.setRemoteDescription(message.localDescription);
+                            remoteConnection.ondatachannel = receiveChannelCallback;
+                            remoteConnection.setRemoteDescription(message.localDescription).then(function() {
+                              remoteConnection.createAnswer().then(function(answer) {
+                                console.log("Got answer in iframe remoteConnection.createAnswer");
+                                remoteConnection.setLocalDescription(answer).then(function() {
+                                  im.sendMessage({
+                                    localDescription: remoteConnection.localDescription.toJSON()
+                                  });
+                                });
+                              });
+                            });
+                          }
+                          if (message.candidate) {
+                            remoteConnection.onicecandidate = function(e) {
+                                if (e.candidate) {
+                                  console.log("iframe remoteConnection.onicecandidate invoked");
+                                  let x = e.candidate.toJSON();
+                                  im.sendMessage({candidate: x});
+                                }
+                            };
+                            console.log("message.candidate received in iframe!");
+                            remoteConnection.addIceCandidate(message.candidate).catch(handleAddCandidateError);
                           }
                       });
                       // setTimeout(function() {
