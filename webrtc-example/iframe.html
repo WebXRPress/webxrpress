@@ -10,58 +10,77 @@
       <script>
         (function($) {
           $(function() {
-              var remoteConnection = null;
-              var receiveChannel = null;
-              im.onReceiveMessage(function(message) {
-                  console.log("in iFrame: received message: ");
-                  console.log(message);
-                  if (message.localDescription) {
-                    console.log("localDescription received!");
-                    remoteConnection = new RTCPeerConnection();
-                    remoteConnection.ondatachannel = function(event) {
-                      receiveChannel = event.channel;
-                      receiveChannel.onmessage = function(event) {
-                        var el = document.createElement("p");
-                        var txtNode = document.createTextNode(event.data);
-                        el.appendChild(txtNode);
-                        let receiveBox = document.getElementById('receivebox');
-                        receiveBox.appendChild(el);
-                      };
-                      receiveChannel.onopen = function() {
-                        console.log("sendChannel.readyState is " + receiveChannel.readyState);
-                      };
-                      receiveChannel.onclose = function() {
-                        console.log("sendChannel.readyState is " + receiveChannel.readyState);
-                      };
-                    };
-                    remoteConnection.setRemoteDescription(message.localDescription).then(function() {
-                      remoteConnection.createAnswer().then(function(answer) {
-                        console.log("Got answer in iframe remoteConnection.createAnswer");
-                        remoteConnection.setLocalDescription(answer).then(function() {
-                          im.sendMessage({
-                            localDescription: remoteConnection.localDescription.toJSON()
-                          });
-                        });
-                      });
-                    });
-                  }
-                  if (message.candidate) {
-                    remoteConnection.onicecandidate = function(e) {
-                        if (e.candidate) {
-                          im.sendMessage({candidate: e.candidate.toJSON()});
-                        }
-                    };
-                    remoteConnection.addIceCandidate(message.candidate).catch(function(e) {
-                      console.log("remoteConnection error: " + JSON.stringify(e.toJSON()));
-                    });
-                  }
-                  if (message.disconnect) {
-                    receiveChannel.close();
-                    remoteConnection.close();
-                    receiveChannel = null;
-                    remoteConnection = null;
-                  }   
+              window.ifm = new IFrameMessaging();
+              window.ifm.onReceiveMessage(function(data) {
+                console.log(data);
+                var el = document.createElement("p");
+                var txtNode = document.createTextNode(data.message);
+                el.appendChild(txtNode);
+                let receiveBox = document.getElementById('receivebox');
+                receiveBox.appendChild(el);
               });
+
+
+              // var remoteConnection = null;
+              // var receiveChannel = null;
+              // ifm.onReceiveMessage(function(message) {
+
+              //     // Ignore unrelated webrtc handshaking messages
+              //     if (message.webrtc != true) return;
+
+              //     console.log("in iFrame: received message: ");
+              //     console.log(message);
+              //     if (message.localDescription) {
+              //       console.log("localDescription received!");
+              //       remoteConnection = new RTCPeerConnection();
+              //       remoteConnection.ondatachannel = function(event) {
+              //         receiveChannel = event.channel;
+              //         receiveChannel.onmessage = function(event) {
+              //           var el = document.createElement("p");
+              //           var txtNode = document.createTextNode(event.data);
+              //           el.appendChild(txtNode);
+              //           let receiveBox = document.getElementById('receivebox');
+              //           receiveBox.appendChild(el);
+              //         };
+              //         receiveChannel.onopen = function() {
+              //           console.log("receiveChannel.onopen fired!");
+              //         };
+              //         receiveChannel.onclose = function() {
+              //           console.log("receiveChannel.onclose fired!");
+              //         };
+              //       };
+              //       remoteConnection.setRemoteDescription(message.localDescription).then(function() {
+              //         remoteConnection.createAnswer().then(function(answer) {
+              //           console.log("Got answer in iframe remoteConnection.createAnswer");
+              //           remoteConnection.setLocalDescription(answer).then(function() {
+              //             ifm.sendMessage({
+              //               webrtc: true, 
+              //               remoteDescription: remoteConnection.localDescription.toJSON()
+              //             });
+              //           });
+              //         });
+              //       });
+              //     }
+              //     if (message.localCandidate) {
+              //       remoteConnection.onicecandidate = function(e) {
+              //           if (e.candidate) {
+              //             ifm.sendMessage({
+              //               webrtc: true, 
+              //               remoteCandidate: e.candidate.toJSON()
+              //             });
+              //           }
+              //       };
+              //       remoteConnection.addIceCandidate(message.localCandidate).catch(function(e) {
+              //         console.log("remoteConnection error: " + e.toString());
+              //       });
+              //     }
+              //     if (message.localDisconnect) {
+              //       receiveChannel.close();
+              //       remoteConnection.close();
+              //       receiveChannel = null;
+              //       remoteConnection = null;
+              //     }   
+              // });
           });
         })(jQuery);
       </script>

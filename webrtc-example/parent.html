@@ -11,62 +11,80 @@
         <script>
         (function($) {
           $(function() {
-            var localConnection = null;   // RTCPeerConnection for our "local" connection
-            var sendChannel = null;
-            $("#connectButton").click(function() {
-              localConnection = new RTCPeerConnection();
-              sendChannel = localConnection.createDataChannel("sendChannel");
-              sendChannel.onopen = function() {
-                console.log("sendChannel.readyState is " + sendChannel.readyState);
-              };
-              sendChannel.onclose = function() {
-                console.log("sendChannel.readyState is " + sendChannel.readyState);
-              };
-              localConnection.onicecandidate = function(e) {
-                if (e.candidate) {
-                  im.sendMessage({candidate: e.candidate.toJSON()});
-                }
-              };
-              localConnection.createOffer().then(function(offer) {
-                return localConnection.setLocalDescription(offer);
-              }).then(function() {
-                im.sendMessage({
-                  localDescription: localConnection.localDescription.toJSON()
-                });
-              }).catch(function(e) {
-                console.log("localConnection error: " + JSON.stringify(e.toJSON()));
-              });
-            });
-            $("#sendButton").click(function() {
-                sendChannel.send($('#message').val());
+            setTimeout(function() {
+              window.ifm = new IFrameMessaging();
+              $("#sendButton").click(function() {
+                window.ifm.sendMessage({message: $('#message').val()});
                 $('#message').val('');
-            });
-            $("#disconnectButton").click(function() {
-              sendChannel.close();
-              localConnection.close();
-              sendChannel = null;
-              localConnection = null;
-              im.sendMessage({
-                disconnect: true
               });
-            });
-            im.onReceiveMessage(function(message) {
-              if (message.localDescription) {
-                localConnection.setRemoteDescription(message.localDescription);
-              }
-              if (message.candidate) {
-                localConnection.addIceCandidate(message.candidate).catch(function(e) {
-                  console.log("im.ReceiveMessage error: " + JSON.stringify(e.toJSON()));
-                });
-              }
-            });
+            }, 1000);
+
+
+            // var localConnection = null;   // RTCPeerConnection for our "local" connection
+            // var sendChannel = null;
+            // $("#connectButton").click(function() {
+            //   localConnection = new RTCPeerConnection();
+            //   sendChannel = localConnection.createDataChannel("sendChannel");
+            //   sendChannel.onopen = function() {
+            //     console.log("sendChannel.onopen fired!");
+            //   };
+            //   sendChannel.onclose = function() {
+            //     console.log("sendChannel.onclose fired!");
+            //   };
+            //   localConnection.onicecandidate = function(e) {
+            //     if (e.candidate) {
+            //       ifm.sendMessage({ 
+            //         webrtc: true, 
+            //         localCandidate: e.candidate.toJSON()
+            //       });
+            //     }
+            //   };
+            //   localConnection.createOffer().then(function(offer) {
+            //     return localConnection.setLocalDescription(offer);
+            //   }).then(function() {
+            //     ifm.sendMessage({
+            //       webrtc: true, 
+            //       localDescription: localConnection.localDescription.toJSON()
+            //     });
+            //   }).catch(function(e) {
+            //     console.log("localConnection error: " + e.toString());
+            //   });
+            // });
+            // $("#sendButton").click(function() {
+            //     sendChannel.send($('#message').val());
+            //     $('#message').val('');
+            // });
+            // $("#disconnectButton").click(function() {
+            //   sendChannel.close();
+            //   localConnection.close();
+            //   sendChannel = null;
+            //   localConnection = null;
+            //   ifm.sendMessage({
+            //     webrtc: true,
+            //     localDisconnect: true
+            //   });
+            // });
+            // ifm.onReceiveMessage(function(message) {
+
+            //   // Ignore unrelated webrtc handshaking messages
+            //   if (message.webrtc != true) return;
+
+            //   if (message.remoteDescription) {
+            //     localConnection.setRemoteDescription(message.remoteDescription);
+            //   }
+            //   if (message.remoteCandidate) {
+            //     localConnection.addIceCandidate(message.remoteCandidate).catch(function(e) {
+            //       console.log("ifm.ReceiveMessage error: " + e.toString());
+            //     });
+            //   }
+            // });
           });
         })(jQuery);
         </script>
     </head>
     <body>
         This is the parent.<br/>
-        <iframe id="theIFrame" src="./iframe.html?1254" width="500px" height="320px"></iframe>
+        <iframe id="theIFrame" src="./iframe.html?12" width="500px" height="320px"></iframe>
 
         <h1>MDN - WebRTC: Simple RTCDataChannel sample</h1>
         
@@ -82,7 +100,7 @@
         <div class="messagebox">
           <label for="message">Enter a message:
             <input type="text" name="message" id="message" placeholder="Message text" 
-                    inputmode="latin" size=60 maxlength=120>
+                    inputmode="latin" size=60 maxlength=4096>
           </label>
           <button id="sendButton" name="sendButton" class="buttonright">
             Send
