@@ -1,11 +1,11 @@
 /**
- * IFrameMessaging provides simple iframe-parent window communication with automatic upgrade to real-time WebRTC if supported.
- * 
+ * @description IFrameMessaging provides simple iframe-parent window communication with automatic upgrade to real-time WebRTC if supported.
  * @param {*} iframe The iframe element to communicate to or defaults to first iframe found if present; otherwise parent window.
  */
 function IFrameMessaging(iframe) {
     var receivers = [];
     var self = this;
+
     if (typeof iframe == 'undefined') {
         this.iframe = document.getElementsByTagName('iframe');
         if (this.iframe.length > 0) {
@@ -17,9 +17,9 @@ function IFrameMessaging(iframe) {
         this.iframe = iframe.contentWindow;
     }
 
+
     /**
-     * Send the given message to the iframe or parent window
-     * 
+     * @description Send the given message to the iframe or parent window
      * @param {*} message The message object to send to the iframe or parent window.
      */
     this.sendMessage = function(message) {
@@ -37,8 +37,7 @@ function IFrameMessaging(iframe) {
     }
 
     /**
-     * An event listener callback to receieve message objects from the iframe or parent window.
-     * 
+     * @description An event listener callback to receieve message objects from the iframe or parent window.
      * @param {*} callback 
      */
     this.onReceiveMessage = function(callback) {
@@ -62,6 +61,7 @@ function IFrameMessaging(iframe) {
         var sendChannel = localConnection.createDataChannel("sendChannel");
         this.sendChannel = sendChannel;
         sendChannel.onmessage = function(event) {
+                              
             console.log("using WebRTC sendChannel.onmessage");
             let data = JSON.parse(event.data);
             for (var i = 0; i < receivers.length; i++) {
@@ -86,11 +86,6 @@ function IFrameMessaging(iframe) {
         }).catch(function(e) {
             console.log("localConnection error: " + e.toString());
         });
-
-        // Provide upgraded message sending from local (parent window) via WebRTC 
-        this.sendWebRTC = function(message) {
-            this.sendChannel.send(JSON.stringify(message));
-        };
 
         // Provide disconnect method on local (parent window) connection
         this.disconnect = function() {
@@ -139,6 +134,7 @@ function IFrameMessaging(iframe) {
                     receiveChannel = event.channel;
                     self.sendChannel = receiveChannel;
                     receiveChannel.onmessage = function(event) {
+                        
                         console.log("using WebRTC receiveChannel.onmessage");
                         let data = JSON.parse(event.data);
                         for (var i = 0; i < receivers.length; i++) {
@@ -169,4 +165,9 @@ function IFrameMessaging(iframe) {
             
         };
     }
+
+    // Provide upgraded message sending from local (parent window) via WebRTC 
+    this.sendWebRTC = function(message) {
+        this.sendChannel.send(JSON.stringify(message));
+    };
 };

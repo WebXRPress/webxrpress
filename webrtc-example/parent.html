@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title>Parent</title>
         <script src="https://webxrpress.org/wp-includes/js/jquery/jquery.min.js"></script>
-        <script src="iframe-messaging.js?"></script>
+        <script src="iframe-messaging.js?123"></script>
         <link rel="stylesheet" href="main.css" type="text/css" media="all">
         <script src="adapter.js"></script>
 
@@ -16,6 +16,14 @@
               $("#sendButton").click(function() {
                 window.ifm.sendMessage({message: $('#message').val()});
                 $('#message').val('');
+              });
+              window.ifm.onReceiveMessage(function(data) {
+                console.log(data);
+                var el = document.createElement("p");
+                var txtNode = document.createTextNode(data.message);
+                el.appendChild(txtNode);
+                let receiveBox = document.getElementById('receivebox');
+                receiveBox.appendChild(el);
               });
             }, 1000);
 
@@ -84,7 +92,7 @@
     </head>
     <body>
         This is the parent.<br/>
-        <iframe id="theIFrame" src="./iframe.html?12" width="500px" height="320px"></iframe>
+        <iframe id="theIFrame" src="./iframe.html?123" width="500px" height="320px"></iframe>
 
         <h1>MDN - WebRTC: Simple RTCDataChannel sample</h1>
         

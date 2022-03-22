@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <title>iframe</title>
       <script src="https://webxrpress.org/wp-includes/js/jquery/jquery.min.js"></script>
-      <script src="iframe-messaging.js?"></script>
+      <script src="iframe-messaging.js?123"></script>
       <link rel="stylesheet" href="main.css" type="text/css" media="all">
       <script src="adapter.js"></script>
       <script>
@@ -18,6 +18,10 @@
                 el.appendChild(txtNode);
                 let receiveBox = document.getElementById('receivebox');
                 receiveBox.appendChild(el);
+              });
+              $("#sendButton").click(function() {
+                window.ifm.sendMessage({message: $('#message').val()});
+                $('#message').val('');
               });
 
 
@@ -88,6 +92,24 @@
     <body>
         This is the iframe.<br/>
         <h1>MDN - WebRTC: Simple RTCDataChannel sample</h1>
+        <div class="controlbox">
+          <button id="connectButton" name="connectButton" class="buttonleft">
+            Connect
+          </button>
+          <button id="disconnectButton" name="disconnectButton" class="buttonright">
+            Disconnect
+          </button>
+        </div>
+        
+        <div class="messagebox">
+          <label for="message">Enter a message:
+            <input type="text" name="message" id="message" placeholder="Message text" 
+                    inputmode="latin" size=60 maxlength=4096>
+          </label>
+          <button id="sendButton" name="sendButton" class="buttonright">
+            Send
+          </button>
+        </div>
         <div class="messagebox" id="receivebox">
           <p>Messages received:</p>
         </div>
