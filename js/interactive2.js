@@ -7,14 +7,7 @@
  */
  (function($) {
     $(function() {
-        setTimeout(function() {
-            window.ifm = new IFrameMessaging();
-            window.ifm.sendMessage({hello:"from interactive2"});
-            //window.ifm.onReceiveMessage(function(data) {
-            //    console.log(data);
-            //});
-            //console.log("Hello from interactive2.js");
-        }, 5000);
+        window.ifm = new IFrameMessaging();
         var newRules = [];
         
         window.emulateCSSBehaviors = function() {
@@ -81,7 +74,8 @@
 
         // Process incoming message requests
         var lastMouseXY = { x: 0, y: 0 };
-        window.addEventListener('message', function(e) {
+        //window.addEventListener('message', function(e) {
+        window.onReceiveMessage(function(e) {
         
             // Emulate a mouseover, mousemove event on any element at the given mouse position
             if (e.data.mouseXY != undefined) {
