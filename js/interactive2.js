@@ -7,10 +7,12 @@
  */
  (function($) {
     $(function() {
-        window.ifm = new IFrameMessaging();
-        window.ifm.onReceiveMessage(function(data) {
-            console.log(data);
-        });
+        setTimeout(function() {
+            window.ifm = new IFrameMessaging();
+            window.ifm.onReceiveMessage(function(data) {
+                console.log(data);
+            });
+        }, 2000);
         var newRules = [];
         
         window.emulateCSSBehaviors = function() {
