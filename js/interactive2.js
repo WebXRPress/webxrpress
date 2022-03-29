@@ -7,7 +7,7 @@
  */
  (function($) {
     $(function() {
-        // window.ifm = new IFrameMessaging();
+        window.ifm = new IFrameMessaging();
         var newRules = [];
         
         window.emulateCSSBehaviors = function() {
