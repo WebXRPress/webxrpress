@@ -11,7 +11,7 @@
         <?php else: ?>
             <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/html-to-image.min.js'; ?>"></script>
         <?php endif; ?>
-        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/iframe-messaging.js'; ?>"></script>
+        <!--  <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/iframe-messaging.js'; ?>"></script> -->
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js?'; ?>"></script>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive2.js?'; ?>"></script>
     </head>
