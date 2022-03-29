@@ -74,8 +74,7 @@
 
         // Process incoming message requests
         var lastMouseXY = { x: 0, y: 0 };
-        //window.addEventListener('message', function(e) {
-        window.onReceiveMessage(function(e) {
+        function doMessage(e) {
         
             // Emulate a mouseover, mousemove event on any element at the given mouse position
             if (e.data.mouseXY != undefined) {
@@ -122,6 +121,12 @@
                     invokePendingMouseUps();
                 }
             }
+        };
+        window.addEventListener('message', function(e) {
+            doMessage(e);
+        });
+        window.ifm.onReceiveMessage(function(e) {
+            doMessage(e);
         });
         
         // Listen for mouseover event and apply hover styles
