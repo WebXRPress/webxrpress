@@ -8,6 +8,7 @@
  (function($) {
     $(function() {
         window.ifm = new IFrameMessaging();
+        console.log("Hello from interactive2.js");
         var newRules = [];
         
         window.emulateCSSBehaviors = function() {
