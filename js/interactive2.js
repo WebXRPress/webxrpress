@@ -7,7 +7,9 @@
  */
  (function($) {
     $(function() {
+        window.ifm = new IFrameMessaging();
         var newRules = [];
+        
         window.emulateCSSBehaviors = function() {
             // Analyze CSS looking for simple CSS hover and active behaviors
             for (var i = 0; i < document.styleSheets.length; i++) {
