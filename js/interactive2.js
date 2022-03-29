@@ -9,10 +9,11 @@
     $(function() {
         setTimeout(function() {
             window.ifm = new IFrameMessaging();
-            window.ifm.onReceiveMessage(function(data) {
-                console.log(data);
-            });
-        }, 2000);
+            //window.ifm.onReceiveMessage(function(data) {
+            //    console.log(data);
+            //});
+            console.log("Hello from interactive2.js");
+        }, 5000);
         var newRules = [];
         
         window.emulateCSSBehaviors = function() {
