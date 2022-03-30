@@ -54,18 +54,18 @@
         };
         
         // Process incoming message requests
-        window.ifm.onReceiveMessage(function(e) {
+        window.ifm.onReceiveMessage(function(data) {
             // Load incoming html and execute scripts (thx jQuery!)
-            if (e.data.html != undefined) {
-                renderDIV.style.height = e.data.height + 'px';
-                renderDIV.style.width = e.data.width + 'px';
-                renderDIV.style.backgroundColor = e.data.backgroundColor;
-                $(renderDIV).html(e.data.html);
+            if (data.html != undefined) {
+                renderDIV.style.height = data.height + 'px';
+                renderDIV.style.width = data.width + 'px';
+                renderDIV.style.backgroundColor = data.backgroundColor;
+                $(renderDIV).html(data.html);
                 window.emulateCSSBehaviors(); 
             }
 
             // Process render requests
-            if (e.data.requestRender != undefined) {
+            if (data.requestRender != undefined) {
                 window.sendRender();
             }
         });
