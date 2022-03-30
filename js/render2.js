@@ -10,24 +10,24 @@
         // Require unique id
         var guid = (new URLSearchParams(window.location.search)).get('guid');
         if (guid == null) return;
+        
+        // Implement our sendMessage routine
+        window.sendMessage = function(message = {}) {
+            
+            // // Only send the message if we are in an iframe
+            // if ( window.location !== window.parent.location ) {
+            //     message.guid = guid; // always furnish our unique id
+            //     window.parent.postMessage(message, '*');
+            // }      
+        };
 
         // Support remote console for iframes in vr
         var oldConsole = window.console.log;
         window.console.log = function(msg) {
             oldConsole(msg);
-            sendMessage({
+            window.sendMessage({
                 parentConsoleLog: msg
             });
-        };
-        
-        // Implement our sendMessage routine
-        window.sendMessage = function(message = {}) {
-            
-            // Only send the message if we are in an iframe
-            if ( window.location !== window.parent.location ) {
-                message.guid = guid; // always furnish our unique id
-                window.parent.postMessage(message, '*');
-            }      
         };
 
         // Implement our sendRender routine, with optional messages
@@ -42,12 +42,12 @@
             if (re == 'html2canvas') {
                 html2canvas(renderDIV).then(function(canvas) {
                     message.dataUrl = canvas.toDataURL();
-                    sendMessage(message);
+                    window.sendMessage(message);
                 });
             }else{
                 htmlToImage.toPng(renderDIV).then(function(dataUrl) {
                     message.dataUrl = dataUrl;
-                    sendMessage(message);
+                    window.sendMessage(message);
                 });
             }
         };
@@ -79,6 +79,6 @@
         // }, 300);
                      
         // Tell parent we're ready
-        sendMessage({ready: true});
+        window.sendMessage({ready: true});
     })
 })(jQuery);

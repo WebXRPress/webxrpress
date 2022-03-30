@@ -7,7 +7,6 @@
  */
  (function($) {
     $(function() {
-        window.ifm = new IFrameMessaging();
         var newRules = [];
         
         window.emulateCSSBehaviors = function() {
@@ -74,60 +73,60 @@
 
         // Process incoming message requests
         var lastMouseXY = { x: 0, y: 0 };
-        function doMessage(e) {
+        // function doMessage(e) {
         
-            // Emulate a mouseover, mousemove event on any element at the given mouse position
-            if (e.data.mouseXY != undefined) {
-                lastMouseXY = e.data.mouseXY;
-                let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
-                if (elm != null) {
-                    let param = {
-                        view: window,
-                        bubbles: true,
-                        cancelable: true,
-                        clientX: lastMouseXY.x,
-                        clientY: lastMouseXY.y
-                    };
-                    elm.dispatchEvent(new MouseEvent('mouseover', param));
-                    elm.dispatchEvent(new MouseEvent('mousemove', param));
-                }
-            }
+        //     // Emulate a mouseover, mousemove event on any element at the given mouse position
+        //     if (e.data.mouseXY != undefined) {
+        //         lastMouseXY = e.data.mouseXY;
+        //         let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
+        //         if (elm != null) {
+        //             let param = {
+        //                 view: window,
+        //                 bubbles: true,
+        //                 cancelable: true,
+        //                 clientX: lastMouseXY.x,
+        //                 clientY: lastMouseXY.y
+        //             };
+        //             elm.dispatchEvent(new MouseEvent('mouseover', param));
+        //             elm.dispatchEvent(new MouseEvent('mousemove', param));
+        //         }
+        //     }
         
-            // Emulate mousedown, click, mouseup events on any element at the given mouse position
-            if (e.data.mouseDown != undefined) {
-                let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
-                if (elm != null) {
-                    let param = {
-                        view: window,
-                        bubbles: true,
-                        cancelable: true,
-                        clientX: lastMouseXY.x,
-                        clientY: lastMouseXY.y
-                    };
-                    elm.dispatchEvent(new MouseEvent('mousedown', param));
-                    elm.dispatchEvent(new MouseEvent('click', param));
-                }
-            }
-            if (e.data.mouseUp != undefined) {
-                let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
-                if (elm != null) {
-                    let param = {
-                        view: window,
-                        bubbles: true,
-                        cancelable: true,
-                        clientX: lastMouseXY.x,
-                        clientY: lastMouseXY.y
-                    };
-                    invokePendingMouseUps();
-                }
-            }
-        };
-        window.addEventListener('message', function(e) {
-            doMessage(e);
-        });
-        window.ifm.onReceiveMessage(function(e) {
-            doMessage(e);
-        });
+        //     // Emulate mousedown, click, mouseup events on any element at the given mouse position
+        //     if (e.data.mouseDown != undefined) {
+        //         let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
+        //         if (elm != null) {
+        //             let param = {
+        //                 view: window,
+        //                 bubbles: true,
+        //                 cancelable: true,
+        //                 clientX: lastMouseXY.x,
+        //                 clientY: lastMouseXY.y
+        //             };
+        //             elm.dispatchEvent(new MouseEvent('mousedown', param));
+        //             elm.dispatchEvent(new MouseEvent('click', param));
+        //         }
+        //     }
+        //     if (e.data.mouseUp != undefined) {
+        //         let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
+        //         if (elm != null) {
+        //             let param = {
+        //                 view: window,
+        //                 bubbles: true,
+        //                 cancelable: true,
+        //                 clientX: lastMouseXY.x,
+        //                 clientY: lastMouseXY.y
+        //             };
+        //             invokePendingMouseUps();
+        //         }
+        //     }
+        // };
+        // window.addEventListener('message', function(e) {
+        //     doMessage(e);
+        // });
+        // window.ifm.onReceiveMessage(function(e) {
+        //     doMessage(e);
+        // });
         
         // Listen for mouseover event and apply hover styles
         var pendingMouseOuts = [];
