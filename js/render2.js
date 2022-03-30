@@ -54,7 +54,7 @@
         };
         
         // Process incoming message requests
-        window.onReceiveMessage(function(e) {
+        window.ifm.onReceiveMessage(function(e) {
             // Load incoming html and execute scripts (thx jQuery!)
             if (e.data.html != undefined) {
                 renderDIV.style.height = e.data.height + 'px';
