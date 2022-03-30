@@ -14,11 +14,12 @@
         // Implement our sendMessage routine
         window.sendMessage = function(message = {}) {
             
-            // // Only send the message if we are in an iframe
-            // if ( window.location !== window.parent.location ) {
-            //     message.guid = guid; // always furnish our unique id
-            //     window.parent.postMessage(message, '*');
-            // }      
+            // Only send the message if we are in an iframe
+            if ( window.location !== window.parent.location ) {
+                message.guid = guid; // always furnish our unique id
+                // window.parent.postMessage(message, '*');
+                window.ifm.sendMessage(message, '*');
+            }      
         };
 
         // Support remote console for iframes in vr
@@ -53,7 +54,7 @@
         };
         
         // Process incoming message requests
-        window.addEventListener('message', function(e) {
+        window.onReceiveMessage(function(e) {
             // Load incoming html and execute scripts (thx jQuery!)
             if (e.data.html != undefined) {
                 renderDIV.style.height = e.data.height + 'px';
