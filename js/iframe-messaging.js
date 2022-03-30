@@ -171,6 +171,3 @@ function IFrameMessaging(iframe) {
         this.sendChannel.send(JSON.stringify(message));
     };
 };
-
-// Create top level instance
-window.ifm = new IFrameMessaging();
