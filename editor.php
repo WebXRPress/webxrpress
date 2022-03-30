@@ -15,7 +15,7 @@
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js?123'; ?>"></script>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive2.js?123'; ?>"></script>
     </head>
-    <body>
+    <body style="background-color: blue;">
         <div class="wxrp-render">
         </div>
     </body>

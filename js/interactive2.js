@@ -7,6 +7,7 @@
  */
  (function($) {
     $(function() {
+        
         var newRules = [];
         
         window.emulateCSSBehaviors = function() {
