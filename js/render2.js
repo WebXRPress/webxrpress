@@ -56,6 +56,7 @@
         // Process incoming message requests
         window.ifm.onReceiveMessage(function(data) {
             console.log("iframe got onReceiveMessage");
+            console.log(data);
 
             // Load incoming html and execute scripts (thx jQuery!)
             if (data.html != undefined) {
