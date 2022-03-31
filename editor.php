@@ -15,7 +15,7 @@
         <script>
             window.ifm = new IFrameMessaging();
         </script>
-        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js?12'; ?>"></script>
+        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js?13'; ?>"></script>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive2.js?12'; ?>"></script>
     </head>
     <body>

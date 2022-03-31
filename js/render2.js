@@ -39,7 +39,6 @@
             return;
         }
         window.sendRender = function(message = {}) {
-            console.log("sending render from iframe");
             let re = (new URLSearchParams(window.location.search)).get('re');
             if (re == 'html2canvas') {
                 html2canvas(renderDIV).then(function(canvas) {
@@ -56,7 +55,8 @@
         
         // Process incoming message requests
         window.ifm.onReceiveMessage(function(data) {
-
+            console.log("onReceiveMessage in iframe");
+            console.log(data);
             // Load incoming html and execute scripts (thx jQuery!)
             if (data.html != undefined) {
                 renderDIV.style.height = data.height + 'px';
@@ -68,7 +68,6 @@
 
             // Process render requests
             if (data.requestRender != undefined) {
-                console.log("line 71");
                 window.sendRender();
             }
         });
