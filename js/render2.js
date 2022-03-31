@@ -39,6 +39,7 @@
             return;
         }
         window.sendRender = function(message = {}) {
+            console.log("sending render from iframe");
             let re = (new URLSearchParams(window.location.search)).get('re');
             if (re == 'html2canvas') {
                 html2canvas(renderDIV).then(function(canvas) {
