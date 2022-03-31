@@ -148,7 +148,6 @@
         
             // Render if needed
             if (bRender) {
-                console.log("sendRender from mouseover");
                 window.sendRender();
             }
         });
@@ -188,7 +187,6 @@
         
             // Render if needed
             if (bRender) {
-                console.log("sendRender from mousedown");
                 window.sendRender();
             }
         });
@@ -226,7 +224,6 @@
         
             // Render if needed
             if (bRender) {
-                console.log("sendRender from mouseout");
                 window.sendRender();
             }
         });
@@ -247,7 +244,6 @@
 
             // Render if needed
             if (bRender) {
-                console.log("sendRender from mouseup");
                 window.sendRender();
             }
         });

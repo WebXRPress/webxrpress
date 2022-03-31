@@ -25,14 +25,16 @@ function IFrameMessaging(iframe) {
     this.sendMessage = function(message) {
 
         // Use upgraded WebRTC data channel if connected
-        if (typeof message.webrtc == 'undefined' && this.sendChannel != null) {
+        if (typeof message.webrtcSetup == 'undefined' && this.sendChannel != null) {
             if (this.sendChannel.readyState == 'open') {
+                console.log("sending via WebRTC");
                 this.sendWebRTC(message);
             }else{
+                console.log("sending via postMessage");
                 this.iframe.postMessage(message, "*"); // Fallback
             }
         } else {
-            this.iframe.postMessage(message, "*"); // Fallback or webrtc handshaking
+            this.iframe.postMessage(message, "*"); // Fallback or webrtcSetup handshaking
         }
     }
 
@@ -45,8 +47,8 @@ function IFrameMessaging(iframe) {
     };
     window.addEventListener("message", function(event) {
 
-        // Route webrtc handshaking messages
-        if (typeof event.data.webrtc != 'undefined') {
+        // Route WebRTC handshaking messages
+        if (typeof event.data.webrtcSetup != 'undefined') {
             self.onWebRTCHandshake(event.data);
             return;
         }
@@ -71,7 +73,7 @@ function IFrameMessaging(iframe) {
         localConnection.onicecandidate = function(e) {
             if (e.candidate) {
                 self.sendMessage({
-                    webrtc: true,
+                    webrtcSetup: true,
                     localCandidate: e.candidate.toJSON()
                 });
             }
@@ -80,7 +82,7 @@ function IFrameMessaging(iframe) {
             return localConnection.setLocalDescription(offer);
         }).then(function() {
             self.sendMessage({
-                webrtc: true,
+                webrtcSetup: true,
                 localDescription: localConnection.localDescription.toJSON()
             });
         }).catch(function(e) {
@@ -94,7 +96,7 @@ function IFrameMessaging(iframe) {
             localConnection.close();
             localConnection = null;
             this.sendMessage({
-                webrtc: true,
+                webrtcSetup: true,
                 localDisconnect: true
             });
         };
@@ -122,7 +124,7 @@ function IFrameMessaging(iframe) {
                     remoteConnection.createAnswer().then(function(answer) {
                         remoteConnection.setLocalDescription(answer).then(function() {
                             self.sendMessage({
-                                webrtc: true,
+                                webrtcSetup: true,
                                 remoteDescription: remoteConnection.localDescription.toJSON()
                             });
                         });
@@ -147,7 +149,7 @@ function IFrameMessaging(iframe) {
                 remoteConnection.onicecandidate = function(e) {
                     if (e.candidate) {
                         self.sendMessage({
-                            webrtc: true,
+                            webrtcSetup: true,
                             remoteCandidate: e.candidate.toJSON()
                         });
                     }
