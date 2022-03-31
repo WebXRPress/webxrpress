@@ -54,7 +54,6 @@
         };
         
         // Process incoming message requests
-        console.log("line 57");
         window.ifm.onReceiveMessage(function(data) {
             console.log("iframe got onReceiveMessage");
 
