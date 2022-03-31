@@ -45,7 +45,7 @@ function IFrameMessaging(iframe) {
     };
     window.addEventListener("message", function(event) {
         console.log("using window.addEventListener message");
-        
+
         // Route WebRTC handshaking messages
         if (typeof event.data.webrtcSetup != 'undefined') {
             self.onWebRTCHandshake(event.data);
@@ -57,115 +57,128 @@ function IFrameMessaging(iframe) {
     });
 
     // Establish WebRTC datachannel connections
-    if (window.parent == window) {
-        var localConnection = new RTCPeerConnection();
-        var sendChannel = localConnection.createDataChannel("sendChannel");
-        this.sendChannel = sendChannel;
-        sendChannel.onmessage = function(event) {
-                              
-            console.log("using WebRTC sendChannel.onmessage");
-            let data = JSON.parse(event.data);
-            for (var i = 0; i < receivers.length; i++) {
-                receivers[i](data);
-            }
-        };
-        localConnection.onicecandidate = function(e) {
-            if (e.candidate) {
+    this.establishWebRTC = function() {
+        if (window.parent == window) {
+            var localConnection = new RTCPeerConnection();
+            var sendChannel = localConnection.createDataChannel("sendChannel");
+            this.sendChannel = sendChannel;
+            sendChannel.onmessage = function(event) {
+                                  
+                console.log("using WebRTC sendChannel.onmessage");
+                let data = JSON.parse(event.data);
+                for (var i = 0; i < receivers.length; i++) {
+                    receivers[i](data);
+                }
+            };
+            localConnection.onicecandidate = function(e) {
+                if (e.candidate) {
+                    self.sendMessage({
+                        webrtcSetup: true,
+                        localCandidate: e.candidate.toJSON()
+                    });
+                }
+            };
+            localConnection.createOffer().then(function(offer) {
+                return localConnection.setLocalDescription(offer);
+            }).then(function() {
                 self.sendMessage({
                     webrtcSetup: true,
-                    localCandidate: e.candidate.toJSON()
+                    localDescription: localConnection.localDescription.toJSON()
                 });
-            }
-        };
-        localConnection.createOffer().then(function(offer) {
-            return localConnection.setLocalDescription(offer);
-        }).then(function() {
-            self.sendMessage({
-                webrtcSetup: true,
-                localDescription: localConnection.localDescription.toJSON()
+            }).catch(function(e) {
+                console.log("localConnection error: " + e.toString());
             });
-        }).catch(function(e) {
-            console.log("localConnection error: " + e.toString());
-        });
-
-        // Provide disconnect method on local (parent window) connection
-        this.disconnect = function() {
-            sendChannel.close();
-            sendChannel = null;
-            localConnection.close();
-            localConnection = null;
-            this.sendMessage({
-                webrtcSetup: true,
-                localDisconnect: true
-            });
-        };
-
-        // Handle local-side (parent window) WebRTC handshaking
-        this.onWebRTCHandshake = function(message) {
-            if (message.remoteDescription) {
-                localConnection.setRemoteDescription(message.remoteDescription);
-            }
-            if (message.remoteCandidate) {
-                localConnection.addIceCandidate(message.remoteCandidate).catch(function(e) {
-                    console.log("localConnection.addIceCandidate error: " + e.toString());
+    
+            // Provide disconnect method on local (parent window) connection
+            this.disconnect = function() {
+                sendChannel.close();
+                sendChannel = null;
+                localConnection.close();
+                localConnection = null;
+                this.sendMessage({
+                    webrtcSetup: true,
+                    localDisconnect: true
                 });
-            }
-        };
-    }else{
-
-        // Handle remote-side (iframe window) WebRTC handshaking
-        var remoteConnection = null;
-        var receiveChannel = null;
-        this.onWebRTCHandshake = function(message) {
-            if (message.localDescription) {
-                remoteConnection = new RTCPeerConnection();
-                remoteConnection.setRemoteDescription(message.localDescription).then(function() {
-                    remoteConnection.createAnswer().then(function(answer) {
-                        remoteConnection.setLocalDescription(answer).then(function() {
-                            self.sendMessage({
-                                webrtcSetup: true,
-                                remoteDescription: remoteConnection.localDescription.toJSON()
+            };
+    
+            // Handle local-side (parent window) WebRTC handshaking
+            this.onWebRTCHandshake = function(message) {
+                if (message.remoteDescription) {
+                    localConnection.setRemoteDescription(message.remoteDescription);
+                }
+                if (message.remoteCandidate) {
+                    localConnection.addIceCandidate(message.remoteCandidate).catch(function(e) {
+                        console.log("localConnection.addIceCandidate error: " + e.toString());
+                    });
+                }
+            };
+        }else{
+    
+            // Handle remote-side (iframe window) WebRTC handshaking
+            var remoteConnection = null;
+            var receiveChannel = null;
+            this.onWebRTCHandshake = function(message) {
+                if (message.localDescription) {
+                    remoteConnection = new RTCPeerConnection();
+                    remoteConnection.setRemoteDescription(message.localDescription).then(function() {
+                        remoteConnection.createAnswer().then(function(answer) {
+                            remoteConnection.setLocalDescription(answer).then(function() {
+                                self.sendMessage({
+                                    webrtcSetup: true,
+                                    remoteDescription: remoteConnection.localDescription.toJSON()
+                                });
                             });
                         });
                     });
-                });
-
-                // Process messages on upgrade WebRTC data channel in remote (iframe)
-                remoteConnection.ondatachannel = function(event) {
-                    receiveChannel = event.channel;
-                    self.sendChannel = receiveChannel;
-                    receiveChannel.onmessage = function(event) {
-                        
-                        console.log("using WebRTC receiveChannel.onmessage");
-                        let data = JSON.parse(event.data);
-                        for (var i = 0; i < receivers.length; i++) {
-                            receivers[i](data);
+    
+                    // Process messages on upgrade WebRTC data channel in remote (iframe)
+                    remoteConnection.ondatachannel = function(event) {
+                        receiveChannel = event.channel;
+                        self.sendChannel = receiveChannel;
+                        receiveChannel.onmessage = function(event) {
+                            
+                            console.log("using WebRTC receiveChannel.onmessage");
+                            let data = JSON.parse(event.data);
+                            for (var i = 0; i < receivers.length; i++) {
+                                receivers[i](data);
+                            }
+                        };
+                    };
+                }
+                if (message.localCandidate) {
+                    remoteConnection.onicecandidate = function(e) {
+                        if (e.candidate) {
+                            self.sendMessage({
+                                webrtcSetup: true,
+                                remoteCandidate: e.candidate.toJSON()
+                            });
                         }
                     };
-                };
+                    remoteConnection.addIceCandidate(message.localCandidate).catch(function(e) {
+                        console.log("removeConnection.addIceCandidate error: " + e.toString());
+                    });
+                }
+                if (message.localDisconnect) {
+                    receiveChannel.close();
+                    receiveChannel = null;
+                    remoteConnection.close();
+                    remoteConnection = null;
+                }
+                
+            };
+        }
+    };
+
+    var handshake = setInterval(function() {
+        if (typeof message.webrtcSetup == 'undefined' && self.sendChannel != null) {
+            if (self.sendChannel.readyState == 'open') {
+                self.establishWebRTC();
+            }else{
+                clearInterval(handshake);
             }
-            if (message.localCandidate) {
-                remoteConnection.onicecandidate = function(e) {
-                    if (e.candidate) {
-                        self.sendMessage({
-                            webrtcSetup: true,
-                            remoteCandidate: e.candidate.toJSON()
-                        });
-                    }
-                };
-                remoteConnection.addIceCandidate(message.localCandidate).catch(function(e) {
-                    console.log("removeConnection.addIceCandidate error: " + e.toString());
-                });
-            }
-            if (message.localDisconnect) {
-                receiveChannel.close();
-                receiveChannel = null;
-                remoteConnection.close();
-                remoteConnection = null;
-            }
-            
-        };
-    }
+        }
+    }, 1000);
+    this.establishWebRTC();
 
     // Provide upgraded message sending from local (parent window) via WebRTC 
     this.sendWebRTC = function(message) {
