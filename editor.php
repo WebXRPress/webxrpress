@@ -11,12 +11,12 @@
         <?php else: ?>
             <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/html-to-image.min.js'; ?>"></script>
         <?php endif; ?>
-        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/iframe-messaging.js?8'; ?>"></script>
+        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/iframe-messaging.js?10'; ?>"></script>
         <script>
             window.ifm = new IFrameMessaging();
         </script>
-        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js?8'; ?>"></script>
-        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive2.js?9'; ?>"></script>
+        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js?10'; ?>"></script>
+        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive2.js?10'; ?>"></script>
     </head>
     <body>
         <div class="wxrp-render">
