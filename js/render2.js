@@ -15,11 +15,11 @@
         window.sendMessage = function(message = {}) {
             
             // Only send the message if we are in an iframe
-            if ( window.location !== window.parent.location ) {
+            //if ( window.location !== window.parent.location ) {
                 message.guid = guid; // always furnish our unique id
                 // window.parent.postMessage(message, '*');
-                window.ifm.sendMessage(message, '*');
-            }      
+                window.ifm.sendMessage(message);
+            //}      
         };
 
         // Support remote console for iframes in vr
