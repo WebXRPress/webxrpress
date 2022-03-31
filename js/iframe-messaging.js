@@ -61,9 +61,8 @@ function IFrameMessaging(iframe) {
         console.log("trying to establish WebRTC");
         if (window.parent == window) {
             var localConnection = new RTCPeerConnection();
-            var sendChannel = localConnection.createDataChannel("sendChannel");
-            this.sendChannel = sendChannel;
-            sendChannel.onmessage = function(event) {
+            this.sendChannel = localConnection.createDataChannel("sendChannel");
+            this.sendChannel.onmessage = function(event) {
                                   
                 console.log("using WebRTC sendChannel.onmessage");
                 let data = JSON.parse(event.data);
@@ -92,8 +91,8 @@ function IFrameMessaging(iframe) {
     
             // Provide disconnect method on local (parent window) connection
             this.disconnect = function() {
-                sendChannel.close();
-                sendChannel = null;
+                this.sendChannel.close();
+                this.sendChannel = null;
                 localConnection.close();
                 localConnection = null;
                 this.sendMessage({
@@ -171,7 +170,7 @@ function IFrameMessaging(iframe) {
     };
 
     var handshake = setInterval(function() {
-        if (typeof message.webrtcSetup == 'undefined' && self.sendChannel != null) {
+        if (self.sendChannel != null) {
             if (self.sendChannel.readyState == 'open') {
                 self.establishWebRTC();
             }else{
