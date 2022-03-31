@@ -27,11 +27,14 @@ function IFrameMessaging(iframe) {
         // Use upgraded WebRTC data channel if connected
         if (typeof message.webrtcSetup == 'undefined' && this.sendChannel != null) {
             if (this.sendChannel.readyState == 'open') {
+                console.log("using sendWebRTC");
                 this.sendWebRTC(message);
             }else{
+                console.log("using postMessage");
                 this.iframe.postMessage(message, "*"); // Fallback
             }
         } else {
+            console.log("using postMessage");
             this.iframe.postMessage(message, "*"); // Fallback or webrtcSetup handshaking
         }
     }
