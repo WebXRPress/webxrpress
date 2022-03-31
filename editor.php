@@ -14,6 +14,7 @@
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/iframe-messaging.js?7'; ?>"></script>
         <script>
             console.log("line 16");
+            document.write("line 17");
             window.ifm = new IFrameMessaging();
         </script>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js?7'; ?>"></script>
