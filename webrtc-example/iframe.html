@@ -12,7 +12,7 @@
           $(function() {
               window.ifm = new IFrameMessaging();
               window.ifm.onReceiveMessage(function(data) {
-                console.log(data);
+                //console.log(data);
                 var el = document.createElement("p");
                 var txtNode = document.createTextNode(data.message);
                 el.appendChild(txtNode);

@@ -139,7 +139,7 @@ function IFrameMessaging(iframe) {
                         receiveChannel = event.channel;
                         self.sendChannel = receiveChannel;
                         receiveChannel.onmessage = function(event) {
-                            
+                        
                             console.log("using WebRTC receiveChannel.onmessage");
                             let data = JSON.parse(event.data);
                             for (var i = 0; i < receivers.length; i++) {
