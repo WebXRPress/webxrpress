@@ -11,7 +11,7 @@
         <?php else: ?>
             <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/html-to-image.min.js'; ?>"></script>
         <?php endif; ?>
-        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/iframe-messaging.js?15'; ?>"></script>
+        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/iframe-messaging.js?16'; ?>"></script>
         <script>
             window.ifm = new IFrameMessaging();
         </script>

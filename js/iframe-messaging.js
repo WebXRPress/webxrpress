@@ -44,13 +44,13 @@ function IFrameMessaging(iframe) {
         receivers.push(callback);
     };
     window.addEventListener("message", function(event) {
-
+        console.log("using window.addEventListener message");
+        
         // Route WebRTC handshaking messages
         if (typeof event.data.webrtcSetup != 'undefined') {
             self.onWebRTCHandshake(event.data);
             return;
         }
-        console.log("using window.addEventListener message");
         for (var i = 0; i < receivers.length; i++) {
             receivers[i](event.data);
         }
