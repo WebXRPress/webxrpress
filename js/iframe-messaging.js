@@ -171,7 +171,7 @@ function IFrameMessaging(iframe) {
 
     var handshake = setInterval(function() {
         if (self.sendChannel != null) {
-            if (self.sendChannel.readyState == 'open') {
+            if (self.sendChannel.readyState != 'open') {
                 self.establishWebRTC();
             }else{
                 console.log("established WebRTC");
