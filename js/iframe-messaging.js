@@ -58,6 +58,7 @@ function IFrameMessaging(iframe) {
 
     // Establish WebRTC datachannel connections
     this.establishWebRTC = function() {
+        console.log("trying to establish WebRTC");
         if (window.parent == window) {
             var localConnection = new RTCPeerConnection();
             var sendChannel = localConnection.createDataChannel("sendChannel");
@@ -174,6 +175,7 @@ function IFrameMessaging(iframe) {
             if (self.sendChannel.readyState == 'open') {
                 self.establishWebRTC();
             }else{
+                console.log("established WebRTC");
                 clearInterval(handshake);
             }
         }
