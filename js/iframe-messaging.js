@@ -27,10 +27,8 @@ function IFrameMessaging(iframe) {
         // Use upgraded WebRTC data channel if connected
         if (typeof message.webrtcSetup == 'undefined' && this.sendChannel != null) {
             if (this.sendChannel.readyState == 'open') {
-                console.log("sending via WebRTC");
                 this.sendWebRTC(message);
             }else{
-                console.log("sending via postMessage");
                 this.iframe.postMessage(message, "*"); // Fallback
             }
         } else {
@@ -52,6 +50,7 @@ function IFrameMessaging(iframe) {
             self.onWebRTCHandshake(event.data);
             return;
         }
+        console.log("using window.addEventListener message");
         for (var i = 0; i < receivers.length; i++) {
             receivers[i](event.data);
         }
