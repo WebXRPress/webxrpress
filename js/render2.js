@@ -68,6 +68,7 @@
 
             // Process render requests
             if (data.requestRender != undefined) {
+                console.log("line 71");
                 window.sendRender();
             }
         });
