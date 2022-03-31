@@ -172,16 +172,16 @@ function IFrameMessaging(iframe) {
         }
     };
 
-    // var handshake = setInterval(function() {
-    //     if (self.sendChannel != null) {
-    //         if (self.sendChannel.readyState != 'open') {
-    //             self.establishWebRTC();
-    //         }else{
-    //             console.log("established WebRTC");
-    //             clearInterval(handshake);
-    //         }
-    //     }
-    // }, 1000);
+    var handshake = setInterval(function() {
+        if (self.sendChannel != null) {
+            if (self.sendChannel.readyState != 'open') {
+                self.establishWebRTC();
+            }else{
+                console.log("established WebRTC");
+                clearInterval(handshake);
+            }
+        }
+    }, 1000);
     this.establishWebRTC();
 
     // Provide upgraded message sending from local (parent window) via WebRTC 
