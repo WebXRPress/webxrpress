@@ -3,6 +3,20 @@
  * @param {*} iframe The iframe element to communicate to or defaults to first iframe found if present; otherwise parent window.
  */
 function IFrameMessaging(iframe) {
+    var receivers = [];
+    var self = this;
+    var handshake = setInterval(function() {
+        if (self.sendChannel != null) {
+            if (self.sendChannel.readyState != 'open') {
+                self.establishWebRTC();
+            }else{
+                console.log("established WebRTC");
+                clearInterval(handshake);
+            }
+        }
+    }, 1000);
+    this.establishWebRTC();
+
     /**
      * @description Send the given message to the iframe or parent window
      * @param {*} message The message object to send to the iframe or parent window.
@@ -172,18 +186,4 @@ function IFrameMessaging(iframe) {
     this.sendWebRTC = function(message) {
         this.sendChannel.send(JSON.stringify(message));
     };
-
-    var receivers = [];
-    var self = this;
-    var handshake = setInterval(function() {
-        if (self.sendChannel != null) {
-            if (self.sendChannel.readyState != 'open') {
-                self.establishWebRTC();
-            }else{
-                console.log("established WebRTC");
-                clearInterval(handshake);
-            }
-        }
-    }, 1000);
-    this.establishWebRTC();
 };
