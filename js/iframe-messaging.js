@@ -1,20 +1,28 @@
 /**
  * @description IFrameMessaging provides simple iframe-parent window communication with automatic upgrade to real-time WebRTC if supported.
  * @param {*} iframe The iframe element to communicate to or defaults to first iframe found if present; otherwise parent window.
+ * @returns Promise that resolves when connected via WebRTC.
  */
 function IFrameMessaging(iframe) {
     var receivers = [];
     var self = this;
-    var handshake = setInterval(function() {
+    var handshake = null;
+    var retries = 0;
+    handshake = setInterval(function() {
+        if (retires > 100) {
+            console.log("exceeded 100 retires, giving up WebRTC");
+            clearInterval(handshake);
+        }
         if (self.sendChannel != null) {
             if (self.sendChannel.readyState != 'open') {
                 self.establishWebRTC();
+                retries++;
             }else{
                 console.log("established WebRTC");
                 clearInterval(handshake);
             }
         }
-    }, 100);
+    }, 50);
     this.establishWebRTC();
 
     /**
