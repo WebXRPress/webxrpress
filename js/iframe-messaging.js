@@ -9,10 +9,6 @@ function IFrameMessaging(iframe) {
     var handshake = null;
     var retries = 0;
     handshake = setInterval(function() {
-        if (retires > 100) {
-            console.log("exceeded 100 retires, giving up WebRTC");
-            clearInterval(handshake);
-        }
         if (self.sendChannel != null) {
             if (self.sendChannel.readyState != 'open') {
                 self.establishWebRTC();
@@ -21,6 +17,10 @@ function IFrameMessaging(iframe) {
                 console.log("established WebRTC");
                 clearInterval(handshake);
             }
+        }
+        if (retries > 100) {
+            console.log("exceeded 100 retires, giving up WebRTC");
+            clearInterval(handshake);
         }
     }, 50);
     this.establishWebRTC();
