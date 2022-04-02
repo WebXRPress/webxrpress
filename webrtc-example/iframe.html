@@ -10,7 +10,9 @@
       <script>
         (function($) {
           $(function() {
-              window.ifm = new IFrameMessaging();
+              window.ifm = new IFrameMessaging().then(function() {
+                console.log(this.onReceiveMessage);
+              });
               window.ifm.onReceiveMessage(function(data) {
                 console.log(data);
                 var el = document.createElement("p");
