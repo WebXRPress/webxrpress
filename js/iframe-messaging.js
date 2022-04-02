@@ -3,21 +3,6 @@
  * @param {*} iframe The iframe element to communicate to or defaults to first iframe found if present; otherwise parent window.
  */
 function IFrameMessaging(iframe) {
-    var receivers = [];
-    var self = this;
-
-    if (typeof iframe == 'undefined') {
-        this.iframe = document.getElementsByTagName('iframe');
-        if (this.iframe.length > 0) {
-            this.iframe = this.iframe[0].contentWindow;
-        }else{
-            this.iframe = window.parent;
-        }
-    }else{
-        this.iframe = iframe.contentWindow;
-    }
-
-
     /**
      * @description Send the given message to the iframe or parent window
      * @param {*} message The message object to send to the iframe or parent window.
@@ -172,6 +157,24 @@ function IFrameMessaging(iframe) {
         }
     };
 
+    if (typeof iframe == 'undefined') {
+        this.iframe = document.getElementsByTagName('iframe');
+        if (this.iframe.length > 0) {
+            this.iframe = this.iframe[0].contentWindow;
+        }else{
+            this.iframe = window.parent;
+        }
+    }else{
+        this.iframe = iframe.contentWindow;
+    }
+
+    // Provide upgraded message sending from local (parent window) via WebRTC 
+    this.sendWebRTC = function(message) {
+        this.sendChannel.send(JSON.stringify(message));
+    };
+
+    var receivers = [];
+    var self = this;
     var handshake = setInterval(function() {
         if (self.sendChannel != null) {
             if (self.sendChannel.readyState != 'open') {
@@ -183,9 +186,4 @@ function IFrameMessaging(iframe) {
         }
     }, 1000);
     this.establishWebRTC();
-
-    // Provide upgraded message sending from local (parent window) via WebRTC 
-    this.sendWebRTC = function(message) {
-        this.sendChannel.send(JSON.stringify(message));
-    };
 };
