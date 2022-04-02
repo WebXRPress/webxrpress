@@ -4,27 +4,6 @@
  * @returns Promise that resolves when connected via WebRTC.
  */
 function IFrameMessaging(iframe) {
-    var receivers = [];
-    var self = this;
-    var handshake = null;
-    var retries = 0;
-    handshake = setInterval(function() {
-        if (self.sendChannel != null) {
-            if (self.sendChannel.readyState != 'open') {
-                self.establishWebRTC();
-                retries++;
-            }else{
-                console.log("established WebRTC");
-                clearInterval(handshake);
-            }
-        }
-        if (retries > 100) {
-            console.log("exceeded 100 retires, giving up WebRTC");
-            clearInterval(handshake);
-        }
-    }, 50);
-    this.establishWebRTC();
-
     /**
      * @description Send the given message to the iframe or parent window
      * @param {*} message The message object to send to the iframe or parent window.
@@ -194,4 +173,25 @@ function IFrameMessaging(iframe) {
     this.sendWebRTC = function(message) {
         this.sendChannel.send(JSON.stringify(message));
     };
+
+    var receivers = [];
+    var self = this;
+    var handshake = null;
+    var retries = 0;
+    handshake = setInterval(function() {
+        if (self.sendChannel != null) {
+            if (self.sendChannel.readyState != 'open') {
+                self.establishWebRTC();
+                retries++;
+            }else{
+                console.log("established WebRTC");
+                clearInterval(handshake);
+            }
+        }
+        if (retries > 100) {
+            console.log("exceeded 100 retires, giving up WebRTC");
+            clearInterval(handshake);
+        }
+    }, 50);
+    this.establishWebRTC();
 };
