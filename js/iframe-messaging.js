@@ -14,7 +14,7 @@ function IFrameMessaging(iframe) {
                 clearInterval(handshake);
             }
         }
-    }, 1000);
+    }, 100);
     this.establishWebRTC();
 
     /**
