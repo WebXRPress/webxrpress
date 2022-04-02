@@ -10,16 +10,16 @@
       <script>
         (function($) {
           $(function() {
-              window.ifm = new IFrameMessaging().then(function() {
-                console.log(this.onReceiveMessage);
-              });
-              window.ifm.onReceiveMessage(function(data) {
+              new IFrameMessaging().then(function(ifm) {
+                window.ifm = ifm;
+                window.ifm.onReceiveMessage(function(data) {
                 console.log(data);
                 var el = document.createElement("p");
                 var txtNode = document.createTextNode(data.message);
                 el.appendChild(txtNode);
                 let receiveBox = document.getElementById('receivebox');
                 receiveBox.appendChild(el);
+              });
               });
               $("#sendButton").click(function() {
                 window.ifm.sendMessage({message: $('#message').val()});

@@ -9,25 +9,25 @@
         <script src="adapter.js"></script>
 
         <script>
-        (function($) {
-          $(function() {
-            setTimeout(function() {
-              window.ifm = new IFrameMessaging();
-              $("#sendButton").click(function() {
-                window.ifm.sendMessage({message: $('#message').val()});
-                $('#message').val('');
-              });
-              window.ifm.onReceiveMessage(function(data) {
-                console.log(data);
-                var el = document.createElement("p");
-                var txtNode = document.createTextNode(data.message);
-                el.appendChild(txtNode);
-                let receiveBox = document.getElementById('receivebox');
-                receiveBox.appendChild(el);
-              });
-            }, 1000);
-          });
-        })(jQuery);
+        // (function($) {
+        //   $(function() {
+        //     setTimeout(function() {
+        //       window.ifm = new IFrameMessaging();
+        //       $("#sendButton").click(function() {
+        //         window.ifm.sendMessage({message: $('#message').val()});
+        //         $('#message').val('');
+        //       });
+        //       window.ifm.onReceiveMessage(function(data) {
+        //         console.log(data);
+        //         var el = document.createElement("p");
+        //         var txtNode = document.createTextNode(data.message);
+        //         el.appendChild(txtNode);
+        //         let receiveBox = document.getElementById('receivebox');
+        //         receiveBox.appendChild(el);
+        //       });
+        //     }, 1000);
+        //   });
+        // })(jQuery);
         </script>
     </head>
     <body>
