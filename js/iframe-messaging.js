@@ -106,6 +106,7 @@ function IFrameMessaging(iframe) {
             // Handle remote-side (iframe window) WebRTC handshaking
             var remoteConnection = null;
             var receiveChannel = null;
+            console.log("client awaiting server inquiry")
             this.onWebRTCHandshake = function(message) {
                 if (message.localDescription) {
                     remoteConnection = new RTCPeerConnection();
