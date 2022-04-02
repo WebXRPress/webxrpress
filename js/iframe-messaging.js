@@ -174,24 +174,30 @@ function IFrameMessaging(iframe) {
         this.sendChannel.send(JSON.stringify(message));
     };
 
+    // Constructor returns promise
     var receivers = [];
     var self = this;
     var handshake = null;
     var retries = 0;
-    handshake = setInterval(function() {
-        if (self.sendChannel != null) {
-            if (self.sendChannel.readyState != 'open') {
-                self.establishWebRTC();
-                retries++;
-            }else{
-                console.log("established WebRTC");
-                clearInterval(handshake);
+
+    return new Promise((resolve, reject) => {
+        handshake = setInterval(function() {
+            if (self.sendChannel != null) {
+                if (self.sendChannel.readyState != 'open') {
+                    self.establishWebRTC();
+                    retries++;
+                }else{
+                    console.log("established WebRTC");
+                    clearInterval(handshake);
+                    resolve();
+                }
             }
-        }
-        if (retries > 100) {
-            console.log("exceeded 100 retires, giving up WebRTC");
-            clearInterval(handshake);
-        }
-    }, 50);
-    this.establishWebRTC();
+            if (retries > 100) {
+                console.log("exceeded 100 retires, giving up WebRTC");
+                clearInterval(handshake);
+                reject();
+            }
+        }, 50);
+        self.establishWebRTC();
+    });
 };
