@@ -189,13 +189,13 @@ function IFrameMessaging(iframe) {
                 }else{
                     console.log("established WebRTC");
                     clearInterval(handshake);
-                    resolve();
+                    resolve(self);
                 }
             }
             if (retries > 100) {
                 console.log("exceeded 100 retires, giving up WebRTC");
                 clearInterval(handshake);
-                reject();
+                reject(self);
             }
         }, 50);
         self.establishWebRTC();
