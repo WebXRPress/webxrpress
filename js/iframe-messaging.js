@@ -3,7 +3,15 @@
  * @param {*} iframe The iframe element to communicate to or defaults to first iframe found if present; otherwise parent window.
  * @returns Promise that resolves when connected via WebRTC.
  */
-function IFrameMessaging(iframe) {
+function IFrameMessaging(iframe, debug = false) {
+
+    // Furnish internal debug messages
+    function debug_log(msg) {
+        if (debug) {
+            console.log(msg);
+        }
+    }
+
     /**
      * @description Send the given message to the iframe or parent window
      * @param {*} message The message object to send to the iframe or parent window.
@@ -13,14 +21,14 @@ function IFrameMessaging(iframe) {
         // Use upgraded WebRTC data channel if connected
         if (typeof message.webrtcSetup == 'undefined' && this.sendChannel != null) {
             if (this.sendChannel.readyState == 'open') {
-                console.log("using sendWebRTC");
+                debug_log("using sendWebRTC");
                 this.sendWebRTC(message);
             }else{
-                console.log("using postMessage");
+                debug_log("using postMessage");
                 this.iframe.postMessage(message, "*"); // Fallback
             }
         } else {
-            console.log("using postMessage");
+            debug_log("using postMessage");
             this.iframe.postMessage(message, "*"); // Fallback or webrtcSetup handshaking
         }
     }
@@ -33,7 +41,7 @@ function IFrameMessaging(iframe) {
         receivers.push(callback);
     };
     window.addEventListener("message", function(event) {
-        console.log("using window.addEventListener message");
+        debug_log("using window.addEventListener message");
 
         // Route WebRTC handshaking messages
         if (typeof event.data.webrtcSetup != 'undefined') {
@@ -47,13 +55,13 @@ function IFrameMessaging(iframe) {
 
     // Establish WebRTC datachannel connections
     this.establishWebRTC = function() {
-        console.log("trying to establish WebRTC");
+        debug_log("trying to establish WebRTC");
         if (window.parent == window) {
             var localConnection = new RTCPeerConnection();
             this.sendChannel = localConnection.createDataChannel("sendChannel");
             this.sendChannel.onmessage = function(event) {
                                   
-                console.log("using WebRTC sendChannel.onmessage");
+                debug_log("using WebRTC sendChannel.onmessage");
                 let data = JSON.parse(event.data);
                 for (var i = 0; i < receivers.length; i++) {
                     receivers[i](data);
@@ -75,7 +83,7 @@ function IFrameMessaging(iframe) {
                     localDescription: localConnection.localDescription.toJSON()
                 });
             }).catch(function(e) {
-                console.log("localConnection error: " + e.toString());
+                debug_log("localConnection error: " + e.toString());
             });
     
             // Provide disconnect method on local (parent window) connection
@@ -97,7 +105,7 @@ function IFrameMessaging(iframe) {
                 }
                 if (message.remoteCandidate) {
                     localConnection.addIceCandidate(message.remoteCandidate).catch(function(e) {
-                        console.log("localConnection.addIceCandidate error: " + e.toString());
+                        debug_log("localConnection.addIceCandidate error: " + e.toString());
                     });
                 }
             };
@@ -106,7 +114,7 @@ function IFrameMessaging(iframe) {
             // Handle remote-side (iframe window) WebRTC handshaking
             var remoteConnection = null;
             var receiveChannel = null;
-            console.log("client awaiting server inquiry")
+            debug_log("client awaiting server inquiry")
             this.onWebRTCHandshake = function(message) {
                 if (message.localDescription) {
                     remoteConnection = new RTCPeerConnection();
@@ -127,7 +135,7 @@ function IFrameMessaging(iframe) {
                         self.sendChannel = receiveChannel;
                         receiveChannel.onmessage = function(event) {
                         
-                            console.log("using WebRTC receiveChannel.onmessage");
+                            debug_log("using WebRTC receiveChannel.onmessage");
                             let data = JSON.parse(event.data);
                             for (var i = 0; i < receivers.length; i++) {
                                 receivers[i](data);
@@ -145,7 +153,7 @@ function IFrameMessaging(iframe) {
                         }
                     };
                     remoteConnection.addIceCandidate(message.localCandidate).catch(function(e) {
-                        console.log("removeConnection.addIceCandidate error: " + e.toString());
+                        debug_log("removeConnection.addIceCandidate error: " + e.toString());
                     });
                 }
                 if (message.localDisconnect) {
@@ -188,13 +196,13 @@ function IFrameMessaging(iframe) {
                     self.establishWebRTC();
                     retries++;
                 }else{
-                    console.log("established WebRTC");
+                    debug_log("established WebRTC");
                     clearInterval(handshake);
                     resolve(self);
                 }
             }
             if (retries > 100) {
-                console.log("exceeded 100 retires, giving up WebRTC");
+                debug_log("exceeded 100 retires, giving up WebRTC");
                 clearInterval(handshake);
                 reject(self);
             }
