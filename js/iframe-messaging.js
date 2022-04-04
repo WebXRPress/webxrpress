@@ -3,14 +3,14 @@
  * @param {*} iframe The iframe element to communicate to or defaults to first iframe found if present; otherwise parent window.
  * @returns Promise that resolves when connected via WebRTC.
  */
-function IFrameMessaging(iframe, debug = false) {
 
-    // Furnish internal debug messages
+// Furnish internal debug messages
+if (typeof debug_log == 'undefined') {
     function debug_log(msg) {
-        if (debug) {
-            console.log(msg);
-        }
+        console.log(msg);
     }
+}
+function IFrameMessaging(iframe) {
 
     /**
      * @description Send the given message to the iframe or parent window
