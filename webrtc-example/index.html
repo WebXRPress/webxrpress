@@ -9,30 +9,30 @@
         <script src="adapter.js"></script>
 
         <script>
-        // (function($) {
-        //   $(function() {
-        //     setTimeout(function() {
-        //       window.ifm = new IFrameMessaging();
-        //       $("#sendButton").click(function() {
-        //         window.ifm.sendMessage({message: $('#message').val()});
-        //         $('#message').val('');
-        //       });
-        //       window.ifm.onReceiveMessage(function(data) {
-        //         console.log(data);
-        //         var el = document.createElement("p");
-        //         var txtNode = document.createTextNode(data.message);
-        //         el.appendChild(txtNode);
-        //         let receiveBox = document.getElementById('receivebox');
-        //         receiveBox.appendChild(el);
-        //       });
-        //     }, 1000);
-        //   });
-        // })(jQuery);
+        (function($) {
+          $(function() {
+            new IFrameMessaging().then(function(ifm) {
+              window.ifm = ifm;
+              $("#sendButton").click(function() {
+                window.ifm.sendMessage({message: $('#message').val()});
+                $('#message').val('');
+              });
+              window.ifm.onReceiveMessage(function(data) {
+                console.log(data);
+                var el = document.createElement("p");
+                var txtNode = document.createTextNode(data.message);
+                el.appendChild(txtNode);
+                let receiveBox = document.getElementById('receivebox');
+                receiveBox.appendChild(el);
+              });
+            });
+          });
+        })(jQuery);
         </script>
     </head>
     <body>
         This is the parent.<br/>
-        <iframe id="theIFrame" src="./iframe.html?24" width="500px" height="320px"></iframe>
+        <iframe id="theIFrame" src="./iframe.html?25" width="500px" height="320px"></iframe>
 
         <h1>MDN - WebRTC: Simple RTCDataChannel sample</h1>
         
