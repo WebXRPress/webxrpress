@@ -13,13 +13,13 @@
               new IFrameMessaging().then(function(ifm) {
                 window.ifm = ifm;
                 window.ifm.onReceiveMessage(function(data) {
-                console.log(data);
-                var el = document.createElement("p");
-                var txtNode = document.createTextNode(data.message);
-                el.appendChild(txtNode);
-                let receiveBox = document.getElementById('receivebox');
-                receiveBox.appendChild(el);
-              });
+                  console.log(data);
+                  var el = document.createElement("p");
+                  var txtNode = document.createTextNode(data.message);
+                  el.appendChild(txtNode);
+                  let receiveBox = document.getElementById('receivebox');
+                  receiveBox.appendChild(el);
+                });
               });
               $("#sendButton").click(function() {
                 window.ifm.sendMessage({message: $('#message').val()});
