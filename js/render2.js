@@ -14,6 +14,7 @@
 
         // Create ifm
         new IFrameMessaging().then(function(ifm) {
+            console.log("render2.js new IFrameMessaging().then(function(ifm) {");
 
             // Obtain the parent div to render
             var renderDIV = document.getElementsByClassName("wxrp-render");
@@ -31,12 +32,14 @@
                     html2canvas(renderDIV).then(function(canvas) {
                         message.dataUrl = canvas.toDataURL();
                         message.guid = guid;
+                        console.log("sending html2canvas");
                         ifm.sendMessage(message);
                     });
                 }else{
                     htmlToImage.toPng(renderDIV).then(function(dataUrl) {
                         message.guid = guid;
                         message.dataUrl = dataUrl;
+                        console.log("sending htmlToImage");
                         ifm.sendMessage(message);
                     });
                 }
