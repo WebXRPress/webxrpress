@@ -15,52 +15,57 @@
         // Create ifm
         new IFrameMessaging().then(function(ifm) {
 
+            // Obtain the parent div to render
+            var renderDIV = document.getElementsByClassName("wxrp-render");
+            if (renderDIV.length > 0) {
+                renderDIV = renderDIV[0];
+            }else{
+                return;
+            }
+
+            // Implement our sendRender routine, with optional messages
+            window.sendRender = function(message = {}) {
+                let re = (new URLSearchParams(window.location.search)).get('re');
+                if (re == 'html2canvas') {
+                    html2canvas(renderDIV).then(function(canvas) {
+                        message.dataUrl = canvas.toDataURL();
+                        message.guid = guid;
+                        ifm.sendMessage(message);
+                    });
+                }else{
+                    htmlToImage.toPng(renderDIV).then(function(dataUrl) {
+                        message.guid = guid;
+                        message.dataUrl = dataUrl;
+                        ifm.sendMessage(message);
+                    });
+                }
+            };
+            
+            // Process incoming message requests
+            ifm.onReceiveMessage(function(data) {
+                
+                // Load incoming html and execute scripts (thx jQuery!)
+                if (data.html != undefined) {
+                    renderDIV.style.height = data.height + 'px';
+                    renderDIV.style.width = data.width + 'px';
+                    renderDIV.style.backgroundColor = data.backgroundColor;
+                    $(renderDIV).html(data.html);
+                    //window.emulateCSSBehaviors(); 
+                }
+
+                // Process render requests
+                if (data.requestRender != undefined) {
+                    ifm.sendRender();
+                }
+            });
+
+            // Tell parent we're ready
+            ifm.sendMessage({ready: true});
+
         }).catch(function(msg) {
             console.log(msg);
         });
-        
-        // // Implement our sendMessage routine
-        // window.sendMessage = function(message = {}) {
-            
-        //     // Only send the message if we are in an iframe
-        //     //if ( window.location !== window.parent.location ) {
-        //         message.guid = guid; // always furnish our unique id
-        //         // window.parent.postMessage(message, '*');
-        //         window.ifm.sendMessage(message);
-        //     //}      
-        // };
 
-        // // Support remote console for iframes in vr
-        // var oldConsole = window.console.log;
-        // window.console.log = function(msg) {
-        //     oldConsole(msg);
-        //     window.sendMessage({
-        //         parentConsoleLog: msg
-        //     });
-        // };
-
-        // // Implement our sendRender routine, with optional messages
-        // var renderDIV = document.getElementsByClassName("wxrp-render");
-        // if (renderDIV.length > 0) {
-        //     renderDIV = renderDIV[0];
-        // }else{
-        //     return;
-        // }
-        // window.sendRender = function(message = {}) {
-        //     let re = (new URLSearchParams(window.location.search)).get('re');
-        //     if (re == 'html2canvas') {
-        //         html2canvas(renderDIV).then(function(canvas) {
-        //             message.dataUrl = canvas.toDataURL();
-        //             window.sendMessage(message);
-        //         });
-        //     }else{
-        //         htmlToImage.toPng(renderDIV).then(function(dataUrl) {
-        //             message.dataUrl = dataUrl;
-        //             window.sendMessage(message);
-        //         });
-        //     }
-        // };
-        
         // // Process incoming message requests
         // window.ifm.onReceiveMessage(function(data) {
             
@@ -90,5 +95,5 @@
                      
         // // Tell parent we're ready
         // window.sendMessage({ready: true});
-    })
+    });
 })(jQuery);
