@@ -25,6 +25,7 @@
 
             // Implement our sendRender routine, with optional messages
             window.sendRender = function(message = {}) {
+                console.log("window.sendRender");
                 let re = (new URLSearchParams(window.location.search)).get('re');
                 if (re == 'html2canvas') {
                     html2canvas(renderDIV).then(function(canvas) {
@@ -45,7 +46,7 @@
             ifm.onReceiveMessage(function(data) {
                 console.log("render2.js ifm.onReceiveMessage");
                 console.log(data);
-                
+
                 // Load incoming html and execute scripts (thx jQuery!)
                 if (data.html != undefined) {
                     renderDIV.style.height = data.height + 'px';
@@ -56,7 +57,8 @@
                 }
 
                 // Process render requests
-                if (data.requestRender != undefined) {
+                if (typeof data.requestRender != "undefined") {
+                    console.log("render2.js data.requestRender != undefined");
                     window.sendRender();
                 }
             });
