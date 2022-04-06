@@ -66,11 +66,13 @@
                 }
             });
 
-            // Tell parent we're ready
-            ifm.sendMessage({
-                guid: guid, 
-                ready: true
-            });
+            // Tell parent we're ready ~1 second later
+            setTimeout(function() {
+                ifm.sendMessage({
+                    guid: guid, 
+                    ready: true
+                });
+            }, 1000);
 
         }).catch(function(msg) {
             console.log(msg);
