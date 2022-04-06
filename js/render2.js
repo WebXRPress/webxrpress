@@ -60,7 +60,7 @@
                 }
 
                 // Process render requests
-                if (typeof data.requestRender != "undefined") {
+                if (data.requestRender != undefined) {
                     console.log("render2.js data.requestRender != undefined");
                     window.sendRender();
                 }
