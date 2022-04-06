@@ -202,9 +202,8 @@ function IFrameMessaging(iframe) {
                 }
             }
             if (retries > 100) {
-                debug_log("exceeded 100 retires, giving up WebRTC");
                 clearInterval(handshake);
-                reject(self);
+                reject("exceeded 100 retires, giving up WebRTC");
             }
         }, 50);
         self.establishWebRTC();

@@ -7,9 +7,17 @@
  */
  (function($) {
     $(function() {
-        // // Require unique id
-        // var guid = (new URLSearchParams(window.location.search)).get('guid');
-        // if (guid == null) return;
+
+        // Require unique id
+        var guid = (new URLSearchParams(window.location.search)).get('guid');
+        if (guid == null) return;
+
+        // Create ifm
+        new IFrameMessaging().then(function(ifm) {
+
+        }).catch(function(msg) {
+            console.log(msg);
+        });
         
         // // Implement our sendMessage routine
         // window.sendMessage = function(message = {}) {
