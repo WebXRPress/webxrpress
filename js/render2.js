@@ -55,12 +55,15 @@
 
                 // Process render requests
                 if (data.requestRender != undefined) {
-                    ifm.sendRender();
+                    window.sendRender();
                 }
             });
 
             // Tell parent we're ready
-            ifm.sendMessage({ready: true});
+            ifm.sendMessage({
+                guid: guid, 
+                ready: true
+            });
 
         }).catch(function(msg) {
             console.log(msg);
