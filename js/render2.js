@@ -43,6 +43,8 @@
             
             // Process incoming message requests
             ifm.onReceiveMessage(function(data) {
+                console.log("render2.js ifm.onReceiveMessage");
+                console.log(data);
                 
                 // Load incoming html and execute scripts (thx jQuery!)
                 if (data.html != undefined) {
