@@ -235,7 +235,7 @@
                     renderPending = false;
                     window.sendRender();
                 }
-            }, 250);
+            }, 33);
 
         }).catch(function(msg) {
             console.log(msg);
