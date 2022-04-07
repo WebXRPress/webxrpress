@@ -201,11 +201,11 @@ function IFrameMessaging(iframe) {
                     resolve(self);
                 }
             }
-            if (retries > 100) {
+            if (retries > 1000) {
                 clearInterval(handshake);
-                reject("exceeded 100 retires, giving up WebRTC");
+                reject("exceeded 10 seconds, multiple retires, giving up WebRTC");
             }
-        }, 50);
+        }, 10);
         self.establishWebRTC();
     });
 };
