@@ -7,7 +7,7 @@
 // Furnish internal debug messages
 if (typeof debug_log == 'undefined') {
     function debug_log(msg) {
-        console.log(msg);
+        //console.log(msg);
     }
 }
 function IFrameMessaging(iframe) {

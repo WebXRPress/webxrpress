@@ -20,7 +20,7 @@
 
         // Create ifm
         new IFrameMessaging().then(function(ifm) {
-            console.log("render2.js new IFrameMessaging().then(function(ifm) {");
+            //console.log("render2.js new IFrameMessaging().then(function(ifm) {");
 
             // Obtain the parent div to render
             var renderDIV = document.getElementsByClassName("wxrp-render");
@@ -32,20 +32,20 @@
 
             // Implement our sendRender routine, with optional messages
             window.sendRender = function(message = {}) {
-                console.log("window.sendRender");
+                //console.log("window.sendRender");
                 let re = (new URLSearchParams(window.location.search)).get('re');
                 if (re == 'html2canvas') {
                     html2canvas(renderDIV).then(function(canvas) {
                         message.dataUrl = canvas.toDataURL();
                         message.guid = guid;
-                        console.log("sending html2canvas");
+                        //console.log("sending html2canvas");
                         ifm.sendMessage(message);
                     });
                 }else{
                     htmlToImage.toPng(renderDIV).then(function(dataUrl) {
                         message.guid = guid;
                         message.dataUrl = dataUrl;
-                        console.log("sending htmlToImage");
+                        //console.log("sending htmlToImage");
                         ifm.sendMessage(message);
                     });
                 }
@@ -53,8 +53,8 @@
             
             // Process incoming message requests
             ifm.onReceiveMessage(function(data) {
-                console.log("render2.js ifm.onReceiveMessage");
-                console.log(data);
+                // console.log("render2.js ifm.onReceiveMessage");
+                // console.log(data);
 
                 // Load incoming html and execute scripts (thx jQuery!)
                 if (data.html != undefined) {
@@ -113,7 +113,7 @@
 
                 // Process render requests
                 if (data.requestRender != undefined) {
-                    console.log("render2.js data.requestRender != undefined");
+                    //console.log("render2.js data.requestRender != undefined");
                     renderPending = true;
                 }
             });
@@ -235,7 +235,7 @@
                     renderPending = false;
                     window.sendRender();
                 }
-            }, 500);
+            }, 100);
 
         }).catch(function(msg) {
             console.log(msg);
@@ -244,7 +244,7 @@
         // Emulate CSS behaviors
         var newRules = [];
         function emulateCSSBehaviors() {
-            console.log("emulateCSSBehaviors");
+            // console.log("emulateCSSBehaviors");
 
             // Analyze CSS looking for simple CSS hover and active behaviors
             for (var i = 0; i < document.styleSheets.length; i++) {
