@@ -124,15 +124,17 @@
                 if (pendingMouseOuts.indexOf(e.target) > -1) return;
                 invokePendingMouseOuts();
                 pendingMouseOuts.push(e.target);
+                let bRender = false;
                 e.target.classList.forEach(function(c) {
                     let hClass = c.toString() + '__hover';
                     if (c.indexOf(hClass) == -1) {
                         if (newRules.indexOf(hClass) > -1) {
                             e.target.classList.add(hClass);
-                            renderPending = true;
+                            bRender = true;
                         }
                     }
                 });
+                if (bRender) renderPending = true;
             });
 
             // Invoke any pending mouseouts from prior mouseovers
@@ -157,15 +159,17 @@
             var pendingMouseUps = [];
             document.body.addEventListener('mousedown', function(e) {
                 pendingMouseUps.push(e.target);
+                let bRender = false;
                 e.target.classList.forEach(function(c) {
                     let aClass = c.toString() + '__active';
                     if (c.indexOf(aClass) == -1) {
                         if (newRules.indexOf(aClass) > -1) {
                             e.target.classList.add(aClass);
-                            renderPending = true;
+                            bRender = true;
                         }
                     }
                 });
+                if (bRender) renderPending = true;
             });
 
             // Invoke any pending mouseups from prior mousedowns
@@ -188,29 +192,33 @@
             // Listen for mouseout event and remove hover styles
             document.body.addEventListener('mouseout', function(e) {
                 var removes = [];
+                let bRender = false;
                 e.target.classList.forEach(function(c) {
                     if (c.indexOf('__hover') > -1) {
                         removes.push(c); // Queue the class to be removed
-                        renderPending = true;
+                        bRender = true;
                     }
                 });
                 removes.forEach(function(r) {
                     e.target.classList.remove(r);
                 });
+                if (bRender) renderPending = true;
             });
 
             // Listen for mouseup event and remove active styles
             document.body.addEventListener('mouseup', function(e) {
                 var removes = [];
+                let bRender = false;
                 e.target.classList.forEach(function(c) {
                     if (c.indexOf('__active') > -1) {
                         removes.push(c); // Queue the class to be removed
-                        renderPending = true;
+                        bRender = true;
                     }
                 });
                 removes.forEach(function(r) {
                     e.target.classList.remove(r);
                 });
+                if (bRender) renderPending = true;
             });
 
             // Tell parent we're ready ~1/2 second later
