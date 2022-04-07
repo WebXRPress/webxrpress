@@ -56,7 +56,7 @@
                     renderDIV.style.width = data.width + 'px';
                     renderDIV.style.backgroundColor = data.backgroundColor;
                     $(renderDIV).html(data.html);
-                    window.emulateCSSBehaviors(); 
+                    emulateCSSBehaviors(); 
                 }
 
                 // Process render requests
@@ -81,6 +81,8 @@
         // Emulate CSS behaviors
         var newRules = [];
         function emulateCSSBehaviors() {
+            console.log("emulateCSSBehaviors");
+            
             // Analyze CSS looking for simple CSS hover and active behaviors
             for (var i = 0; i < document.styleSheets.length; i++) {
                 var sheet = document.styleSheets[i];
