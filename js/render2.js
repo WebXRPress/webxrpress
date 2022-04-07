@@ -12,6 +12,9 @@
         var guid = (new URLSearchParams(window.location.search)).get('guid');
         if (guid == null) return;
 
+        // Used for emulating mouse behaviors
+        var lastMouseXY = { x: 0, y: 0 };
+
         // Create ifm
         new IFrameMessaging().then(function(ifm) {
             console.log("render2.js new IFrameMessaging().then(function(ifm) {");
@@ -59,6 +62,54 @@
                     emulateCSSBehaviors(); 
                 }
 
+                // Emulate a mouseover, mousemove event on any element at the given mouse position
+                if (data.mouseXY != undefined) {
+                    lastMouseXY = data.mouseXY;
+                    let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
+                    if (elm != null) {
+                        let param = {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: lastMouseXY.x,
+                            clientY: lastMouseXY.y
+                        };
+                        elm.dispatchEvent(new MouseEvent('mouseover', param));
+                        elm.dispatchEvent(new MouseEvent('mousemove', param));
+                    }
+                }
+
+                // Emulate mousedown, click, mouseup events on any element at the given mouse position
+                if (data.mouseDown != undefined) {
+                    let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
+                    if (elm != null) {
+                        let param = {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: lastMouseXY.x,
+                            clientY: lastMouseXY.y
+                        };
+                        elm.dispatchEvent(new MouseEvent('mousedown', param));
+                        elm.dispatchEvent(new MouseEvent('click', param));
+                    }
+                }
+                if (data.mouseUp != undefined) {
+                    let elm = document.elementFromPoint(lastMouseXY.x, lastMouseXY.y);
+                    if (elm != null) {
+                        let param = {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: lastMouseXY.x,
+                            clientY: lastMouseXY.y
+                        };
+                        invokePendingMouseUps();
+                    }
+                }
+
+                
+
                 // Process render requests
                 if (data.requestRender != undefined) {
                     console.log("render2.js data.requestRender != undefined");
@@ -82,7 +133,7 @@
         var newRules = [];
         function emulateCSSBehaviors() {
             console.log("emulateCSSBehaviors");
-            
+
             // Analyze CSS looking for simple CSS hover and active behaviors
             for (var i = 0; i < document.styleSheets.length; i++) {
                 var sheet = document.styleSheets[i];
