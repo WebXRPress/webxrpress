@@ -15,6 +15,9 @@
         // Used for emulating mouse behaviors
         var lastMouseXY = { x: 0, y: 0 };
 
+        // Use single render request
+        var renderPending = false;
+
         // Create ifm
         new IFrameMessaging().then(function(ifm) {
             console.log("render2.js new IFrameMessaging().then(function(ifm) {");
@@ -106,15 +109,108 @@
                         };
                         invokePendingMouseUps();
                     }
-                }
-
-                
+                }               
 
                 // Process render requests
                 if (data.requestRender != undefined) {
                     console.log("render2.js data.requestRender != undefined");
-                    window.sendRender();
+                    renderPending = true;
                 }
+            });
+
+            // Listen for mouseover event and apply hover styles
+            var pendingMouseOuts = [];
+            document.body.addEventListener('mouseover', function(e) {
+                if (pendingMouseOuts.indexOf(e.target) > -1) return;
+                invokePendingMouseOuts();
+                pendingMouseOuts.push(e.target);
+                e.target.classList.forEach(function(c) {
+                    let hClass = c.toString() + '__hover';
+                    if (c.indexOf(hClass) == -1) {
+                        if (newRules.indexOf(hClass) > -1) {
+                            e.target.classList.add(hClass);
+                            renderPending = true;
+                        }
+                    }
+                });
+            });
+
+            // Invoke any pending mouseouts from prior mouseovers
+            function invokePendingMouseOuts() {
+                while(pendingMouseOuts.length > 0) {
+                    let elm = pendingMouseOuts.pop();
+                    if (elm != null) {
+                        let param = {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: lastMouseXY.x,
+                            clientY: lastMouseXY.y
+                        };
+                        elm.dispatchEvent(new Event('mouseout', param));
+                        elm.dispatchEvent(new Event('mouseleave', param));
+                    }
+                }
+            }   
+
+            // Listen for mousedown event and apply active styles
+            var pendingMouseUps = [];
+            document.body.addEventListener('mousedown', function(e) {
+                pendingMouseUps.push(e.target);
+                e.target.classList.forEach(function(c) {
+                    let aClass = c.toString() + '__active';
+                    if (c.indexOf(aClass) == -1) {
+                        if (newRules.indexOf(aClass) > -1) {
+                            e.target.classList.add(aClass);
+                            renderPending = true;
+                        }
+                    }
+                });
+            });
+
+            // Invoke any pending mouseups from prior mousedowns
+            function invokePendingMouseUps() {
+                while(pendingMouseUps.length > 0) {
+                    let elm = pendingMouseUps.pop();
+                    if (elm != null) {
+                        let param = {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: lastMouseXY.x,
+                            clientY: lastMouseXY.y
+                        };
+                        elm.dispatchEvent(new Event('mouseup', param));
+                    }
+                }
+            }
+
+            // Listen for mouseout event and remove hover styles
+            document.body.addEventListener('mouseout', function(e) {
+                var removes = [];
+                e.target.classList.forEach(function(c) {
+                    if (c.indexOf('__hover') > -1) {
+                        removes.push(c); // Queue the class to be removed
+                        renderPending = true;
+                    }
+                });
+                removes.forEach(function(r) {
+                    e.target.classList.remove(r);
+                });
+            });
+
+            // Listen for mouseup event and remove active styles
+            document.body.addEventListener('mouseup', function(e) {
+                var removes = [];
+                e.target.classList.forEach(function(c) {
+                    if (c.indexOf('__active') > -1) {
+                        removes.push(c); // Queue the class to be removed
+                        renderPending = true;
+                    }
+                });
+                removes.forEach(function(r) {
+                    e.target.classList.remove(r);
+                });
             });
 
             // Tell parent we're ready ~1/2 second later
@@ -123,6 +219,14 @@
                     guid: guid, 
                     ready: true
                 });
+            }, 500);
+
+            // Render any pending changes
+            setInterval(function() {
+                if (renderPending) {
+                    renderPending = false;
+                    window.sendRender();
+                }
             }, 500);
 
         }).catch(function(msg) {

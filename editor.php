@@ -13,7 +13,6 @@
         <?php endif; ?>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/iframe-messaging.js?' . rand(0,99999999); ?>"></script>
         <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/render2.js?' . rand(0,99999999); ?>"></script>
-        <script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/interactive2.js?' . rand(0,99999999); ?>"></script>
     </head>
     <body>
         <div class="wxrp-render">
