@@ -56,7 +56,7 @@
                     renderDIV.style.width = data.width + 'px';
                     renderDIV.style.backgroundColor = data.backgroundColor;
                     $(renderDIV).html(data.html);
-                    //window.emulateCSSBehaviors(); 
+                    window.emulateCSSBehaviors(); 
                 }
 
                 // Process render requests
@@ -78,24 +78,70 @@
             console.log(msg);
         });
 
-        // // Process incoming message requests
-        // window.ifm.onReceiveMessage(function(data) {
-            
-        //     // Load incoming html and execute scripts (thx jQuery!)
-        //     if (data.html != undefined) {
-        //         renderDIV.style.height = data.height + 'px';
-        //         renderDIV.style.width = data.width + 'px';
-        //         renderDIV.style.backgroundColor = data.backgroundColor;
-        //         $(renderDIV).html(data.html);
-        //         window.emulateCSSBehaviors(); 
-        //     }
-
-        //     // Process render requests
-        //     if (data.requestRender != undefined) {
-        //         window.sendRender();
-        //     }
-        // });
+        // Emulate CSS behaviors
+        var newRules = [];
+        function emulateCSSBehaviors() {
+            // Analyze CSS looking for simple CSS hover and active behaviors
+            for (var i = 0; i < document.styleSheets.length; i++) {
+                var sheet = document.styleSheets[i];
+                try {
+                    var classes = document.styleSheets[i].cssRules;
+                    for (var j = 0; j < classes.length; j++) {
+                        var c = classes[j];
+                        var st = c.selectorText;
+                        try {
+                            st = st.toString();
+                        }catch(e){
+                            st = "";
+                            // Ignore CSSOMString access errors 'undefined'
+                            // console.log(e.message);
+                        }
         
+                        // Find all classes with the hover and active selectors
+                        if (st.indexOf(':hover') > -1 || st.indexOf(':active') > -1) {
+                            let ac = st.split(' ');
+                            ac.forEach(function(a) {
+        
+                                // Support simple hover and active rules with no sub-selectors
+                                if ((a.indexOf(':hover') > -1 || a.indexOf(':active')) 
+                                    && a.indexOf('[') == -1 && a.indexOf('(') == -1) {
+        
+                                    // Replace the hover selector with our mirror selector
+                                    let b = a.replace(':hover', '__hover');
+                                    b = b.replace(':active', '__active');
+                                    b = b.replace(',', '');
+        
+                                    // Queue the new rule, we can't add it yet
+                                    newRules.push(b + ' { ' + c.style.cssText + ' }');
+                                }
+                            })
+                        }
+                    }
+                }catch(e){
+                    // Ignore Uncaught DOMException: CSSStyleSheet.cssRules getter:
+                    // Not allowed to access cross-origin and stylesheetrule.selectorText
+                    // is undefined errors.
+                    // console.log(e.message);
+                }
+            }
+        
+            // Create stylesheet for our hover & active mirrored styles
+            if (newRules.length > 0) {
+                var css = '';
+                newRules.forEach(function(r) {
+                   css += r; 
+                });
+                var style = document.createElement('style');
+                document.body.appendChild(style); // !important, insert at bottom
+                style.appendChild(document.createTextNode(css));
+
+                // Keep list of classes for render tracking
+                for (var i = 0; i < newRules.length; i++) {
+                    newRules[i] = newRules[i].split(' ')[0].replace('.', '');
+                }
+            }
+        }; // emulateCSSBehaviors
+
         // // Send DOM changed notifications
         // var lastHTML = '';
         // // window.domChangedInterval = setInterval(function() {
@@ -104,8 +150,5 @@
         // //         window.sendMessage({domChanged: true});
         // //     }
         // // }, 300);
-                     
-        // // Tell parent we're ready
-        // window.sendMessage({ready: true});
     });
 })(jQuery);
